@@ -30,7 +30,14 @@ local function PlayerLoaded() -- Player has been fully loaded. End load screen.
 
     local LastTween
     for _, Item in pairs(LoadingScreen:GetChildren()) do
-        local Tween = TweenService:Create(Item, LoadingScreenInfo, {Transparency = 1})
+        local Tween
+        if Item.ClassName == "Frame" then
+            Tween = TweenService:Create(Item, LoadingScreenInfo, {Transparency = 1})
+        elseif Item.ClassName == "ImageLabel" then
+            Tween = TweenService:Create(Item, LoadingScreenInfo, {ImageTransparency = 1})
+        elseif Item.ClassName == "TextLabel" then
+            Tween = TweenService:Create(Item, LoadingScreenInfo, {TextTransparency = 1})
+        end
         Tween:Play()
 
         LastTween = Tween
@@ -48,7 +55,3 @@ end
 LoadEvent.OnClientEvent:Connect(PlayerLoaded)
 
 -- / / EVENTS
-
--- / / ON PLAYERADDED
-
-LoadingScreen.Enabled = true
