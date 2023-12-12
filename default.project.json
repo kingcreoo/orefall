@@ -3,16 +3,22 @@
   "tree": {
     "$className": "DataModel",
 
+    "ReplicatedFirst": {
+      "Initialize": {
+        "$path": "src/ReplicatedFirst"
+      }
+    },
+
     "ServerScriptService": {
       "Server": {
-        "$path": "src/server"
+        "$path": "src/ServerScriptService"
       }
     },
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
         "Client": {
-          "$path": "src/client"
+          "$path": "src/StarterPlayerScripts"
         }
       }
     }
