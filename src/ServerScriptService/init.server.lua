@@ -35,7 +35,7 @@ end
 
 local function RemovePlayer(Player: Player)
     local PlayerTower = Towers[Player.Name]
-    PlayerTower.Remove() -- Remove the player's tower from the workspace and mark it's location as vacant.
+    PlayerTower:Remove() -- Remove the player's tower from the workspace and mark it's location as vacant.
 end
 
 -- / / REMOTES
