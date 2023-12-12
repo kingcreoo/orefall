@@ -4,3 +4,10 @@ A simple, relaxing game in which ores fall from the sky. The player can upgrade 
 
 To see scripting progress:
 https://trello.com/invite/b/MtD06f44/ATTI6c4943b7ac7ffdf946bc9a251356cbb5625FA19A/orefall
+
+# Changelog
+
+#### Version 0.0.1
+
+- Layout game files
+- Publish to ROBLOX
