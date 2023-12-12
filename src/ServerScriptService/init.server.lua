@@ -22,7 +22,7 @@ local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
 
 local function LoadPlayer(Player: Player)
     local Character = Player.Character or Player.CharacterAdded:Wait()
-    Character:SetPrimaryPartCFrame(workspace:WaitForChild("Limbo").CFrame + CFrame.new(0,5,0)) -- Teleport player to limbo
+    Character:SetPrimaryPartCFrame(workspace:WaitForChild("Limbo").CFrame + Vector3.new(0,5,0)) -- Teleport player to limbo
 
     local PlayerTower = _Tower.New(Player)
     PlayerTower:Add() -- Create a tower for the player and assign a vacant(now occupied) location.
