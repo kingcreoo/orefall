@@ -26,6 +26,7 @@ function Tower:Add() -- Create player's tower and assign location.
     -- Eventually: load player's saved tower.
 
     self.Model = ReplicatedStorage:WaitForChild("TowerTemplate"):Clone()
+    self.Model.Parent = workspace:WaitForChild("ActiveTowers")
 
     local SelectedLocation
     for Number, Info in pairs(_Settings.Locations) do -- Select a vacant location
