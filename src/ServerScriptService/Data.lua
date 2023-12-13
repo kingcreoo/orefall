@@ -65,10 +65,13 @@ end
 function _Data.Set(Player: Player, PlayerData: table)
     Database[Player.Name] = PlayerData -- Set player's data
     
-    local leaderstats = Player:WaitForChild("leaderstats")
-    for Stat, Value in pairs(PlayerData["leaderstats"]) do
-        leaderstats:WaitForChild(Stat).Value = Value
+    local leaderstats = Player:FindFirstChild("leaderstats")
+    if leaderstats then
+        for Stat, Value in pairs(PlayerData["leaderstats"]) do -- Update player's leaderstat data here
+            leaderstats:WaitForChild(Stat).Value = Value
+        end
     end
+    
 
     local TimeOfTransaction = os.time()
     local ToSave

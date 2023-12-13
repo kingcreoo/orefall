@@ -22,10 +22,11 @@ function Tower.New(Player)
     return self
 end
 
-function Tower:Add() -- Create player's tower and assign location.
+function Tower:Add(Player) -- Create player's tower and assign location.
     -- Eventually: load player's saved tower.
 
     self.Model = ReplicatedStorage:WaitForChild("TowerTemplate"):Clone()
+    self.Model.Name = Player.Name
     self.Model.Parent = workspace:WaitForChild("ActiveTowers")
 
     local SelectedLocation

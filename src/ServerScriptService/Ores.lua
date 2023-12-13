@@ -11,7 +11,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 -- / / MODULES
 
-local _Settings = ServerScriptService:WaitForChild("Server"):WaitForChild("Settings")
+local _Settings = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Settings"))
 
 -- / / VARIABLES
 
@@ -58,8 +58,8 @@ local function GenerateOreID()
     local ID = tostring(workspace:GetServerTimeNow()) .. "-"
 
     for _ = 1, 8 do
-        local RandomNumber = math.random(1, #Characters)
-        local RandomCharacter = Characters[RandomNumber]
+        local RandomNumber = string.len(Characters)
+        local RandomCharacter = Characters:sub(RandomNumber, RandomNumber)
 
         ID = ID .. RandomCharacter
     end
