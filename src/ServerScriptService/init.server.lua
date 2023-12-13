@@ -59,7 +59,7 @@ local function LoadPlayer(Player: Player)
     local PlayerData = DataStore:GetAsync("Player_" .. Players:GetUserIdFromNameAsync(Player.Name))
     if not PlayerData then
         print(Player.Name .. " is a new player.")
-        PlayerData = _Data:NewPlayer(Player)
+        PlayerData = _Data.NewPlayer(Player)
     else
         if PlayerData["Version"] ~= _Settings.Version then
             DeepReconcile(_Settings.DefaultData, PlayerData) 
