@@ -73,20 +73,22 @@ function _Ores.DropForPlayer(Player)
     OreDataBase[Player.Name] = {}
 
     coroutine.wrap(function()
-        task.wait(4) -- In the future, find this time based off of player's boosts & server boosts
-        local Luck = 1 -- In the future, find this luck based off dropper's luck, player's luck, & boosts
-        local DropTable = {}
+        while Players:FindFirstChild(Player.Name) do
+            task.wait(4) -- In the future, find this time based off of player's boosts & server boosts
+            local Luck = 1 -- In the future, find this luck based off dropper's luck, player's luck, & boosts
+            local DropTable = {}
 
-        for _, Dropper in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Droppers"):GetChildren()) do
-            local SelectedOre = SelectOre(Luck) -- Choose an ore
+            for _, Dropper in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Droppers"):GetChildren()) do
+                local SelectedOre = SelectOre(Luck) -- Choose an ore
 
-            local OreID = GenerateOreID() -- Create an ID for the ore
-            OreDataBase[Player.Name][OreID] = SelectedOre["Name"] -- Update player's oredatabase with new ore
+                local OreID = GenerateOreID() -- Create an ID for the ore
+                OreDataBase[Player.Name][OreID] = SelectedOre["Name"] -- Update player's oredatabase with new ore
 
-            DropTable[Dropper.Name] = {SelectedOre["Name"], OreID} -- Add ore the table that will be returned to the player
+                DropTable[Dropper.Name] = {SelectedOre["Name"], OreID} -- Add ore the table that will be returned to the player
+            end
+
+            Events:WaitForChild("Drop"):FireClient(Player, DropTable)
         end
-
-        Events:WaitForChild("Drop"):FireClient(Player, DropTable)
     end)()
 end
 
