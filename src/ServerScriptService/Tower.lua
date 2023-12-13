@@ -9,7 +9,7 @@ Tower.__index = Tower
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- / / VARIABLES
+-- / / MODULES
 
 local _Settings = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Settings"))
 

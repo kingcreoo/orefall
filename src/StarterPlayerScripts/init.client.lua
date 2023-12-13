@@ -17,6 +17,7 @@ local LoadingScreen: ScreenGui = LocalGui:WaitForChild("Load")
 
 local Events: Folder = ReplicatedStorage:WaitForChild("Events")
 local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
+local DropEvent: RemoteEvent = Events:WaitForChild("Drop")
 
 local LoadingScreenInfo = TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
 
@@ -50,8 +51,21 @@ local function PlayerLoaded() -- Player has been fully loaded. End load screen.
     end)
 end
 
+local function CreateOre(DropperName, OreTable)
+    local Ore: Instance = ReplicatedStorage:WaitForChild("Ores"):WaitForChild(OreTable[1]):Clone()
+    Ore:SetAttribute("ID", OreTable[2])
+
+    Ore.Position = workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Droppers"):WaitForChild(DropperName):WaitForChild("Drop").Position
+    Ore.Parent = workspace:WaitForChild("ActiveOres")
+end
+
 -- / / REMOTES
 
 LoadEvent.OnClientEvent:Connect(PlayerLoaded)
+DropEvent.OnClientEvent:Connect(function(DropTable)
+    for DropperName, OreTable in pairs(DropTable) do
+        CreateOre(DropperName, OreTable)
+    end
+end)
 
 -- / / EVENTS

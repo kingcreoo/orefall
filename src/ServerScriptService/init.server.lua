@@ -14,6 +14,7 @@ local DataStore = DataStoreService:GetDataStore("DataStore")
 local _Settings = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Settings"))
 local _Tower = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Tower"))
 local _Data = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Data"))
+local _Ores = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Ores"))
 
 -- / / VARIABLES
 
@@ -86,6 +87,10 @@ local function LoadPlayer(Player: Player)
     Character:SetPrimaryPartCFrame(PlayerTower.Model:WaitForChild("Teleport").CFrame) -- Teleport the player to the tower's location.
 
     LoadEvent:FireClient(Player) -- Communicate to the client that player has been loaded.
+
+    task.wait(1)
+
+    _Ores.DropForPlayer(Player) -- Start dropping ores for the player
 end
 
 local function RemovePlayer(Player: Player)
