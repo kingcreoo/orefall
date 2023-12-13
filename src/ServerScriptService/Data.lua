@@ -62,7 +62,7 @@ function _Data.NewPlayer(Player: Player) -- A new player has joined the game. Fo
     return PlayerData
 end
 
-function _Data.Set(Player: Player, PlayerData: Table)
+function _Data.Set(Player: Player, PlayerData: table)
     Database[Player.Name] = PlayerData -- Set player's data
     
     local TimeOfTransaction = os.time()
