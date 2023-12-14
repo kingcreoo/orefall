@@ -15,6 +15,8 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / VARIABLES
 
+local ServerStartTime = workspace:GetServerTimeNow()
+
 local Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_<>"
 local OreDataBase = {}
 
@@ -55,10 +57,10 @@ local function SelectOre(Luck: number) -- Set up only for selecting ores. Do not
 end
 
 local function GenerateOreID()
-    local ID = tostring(workspace:GetServerTimeNow()) .. "-"
+    local ID = tostring(ServerStartTime - workspace:GetServerTimeNow()) .. "-"
 
     for _ = 1, 8 do
-        local RandomNumber = string.len(Characters)
+        local RandomNumber = math.random(1, string.len(Characters))
         local RandomCharacter = Characters:sub(RandomNumber, RandomNumber)
 
         ID = ID .. RandomCharacter
