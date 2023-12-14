@@ -18,10 +18,13 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 local LocalPlayer: Player = Players.LocalPlayer
 local Mouse: Mouse = LocalPlayer:GetMouse()
 
+local Limbo: Part = workspace:WaitForChild("Limbo")
+local Highlight: Highlight = workspace:WaitForChild("Highlight")
+local ActiveOres: Folder = workspace:WaitForChild("ActiveOres")
+
 local Events = ReplicatedStorage:WaitForChild("Events")
 local Functions = ReplicatedStorage:WaitForChild("Functions")
 
-local EquipEvent: RemoteEvent = Events:WaitForChild("Equip")
 local ActivateFunction: RemoteFunction = Functions:WaitForChild("Activate")
 local ValidateFunction: RemoteFunction = Functions:WaitForChild("Validate")
 
@@ -33,7 +36,9 @@ function _Pickaxe.New(Type: string)
 
     self.Active = false
     self.Equipped = false
+
     self.Target = nil
+    self.Highlight = nil
 
     self.Tool = LocalPlayer:WaitForChild("Backpack"):WaitForChild("Pickaxe")
     self.Listen = self:Listen()
@@ -59,39 +64,54 @@ function _Pickaxe:Listen()
     self.Tool.Deactivated:Connect(function()
         self:Deactivate()
     end)
+
+    Mouse.Move:Connect(function()
+        self:Move()
+    end)
 end
 
 function _Pickaxe:Move()
-    if self.Equipped == false then
+    local Target = Mouse.Target
+
+    if not Target then return end
+
+    if not Target.Parent then return end
+
+    if Target.Parent ~= ActiveOres then return end
+
+    if self.Equipped == false then return end
+
+    self:Highlight(Target)
+end
+
+function _Pickaxe:Highlight(Target: Part)
+    if not Target then
+        Highlight.Adornee = Limbo
         return
     end
 
-    if self.Target == nil then
-        return
-    end
+    Highlight.Adornee = Target
 end
 
 function _Pickaxe:Activate()
-    print('Activated')
+
 end
 
 function _Pickaxe:Deactivate()
-    print('Deactivated')
+
 end
 
 function _Pickaxe:Equip()
     --local Humanoid: Humanoid = LocalPlayer.Character:WaitForChild("Humanoid")
 
-    if self.Equipped == true then
+    if self.Equipped == true then -- dequip
         self.Equipped = false
 
-        print('Dequipped')
+        self:Highlight(nil)
 
         --Humanoid:EquipTool(self.Tool) -- For when we create custom pickaxe GUI
-    elseif self.Equipped == false then
+    elseif self.Equipped == false then -- equip
         self.Equipped = true
-
-        print('Equipped')
 
         --Humanoid:UnequipTools() -- For when we create custom pickaxe GUI
     end
