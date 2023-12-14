@@ -24,6 +24,11 @@ local Events = ReplicatedStorage:WaitForChild("Events")
 
 -- / / LOCAL FUNCTIONS
 
+local function RoundNumberToDecimal(Number, DecimalPlace)
+    local Multiplier = 10 ^ DecimalPlace
+    return math.floor(Number * Multiplier + 0.5) / Multiplier
+end
+
 local function DeepCopy(Table)
     local Copy = {}
 
@@ -54,11 +59,6 @@ local function SelectOre(Luck: number) -- Set up only for selecting ores. Do not
     end
 
     return SelectedOre
-end
-
-local function RoundNumberToDecimal(Number, DecimalPlace)
-    local Multiplier = 10 ^ DecimalPlace
-    return math.floor(Number * Multiplier + 0.5) / Multiplier
 end
 
 local function GenerateOreID()

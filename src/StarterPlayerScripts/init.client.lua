@@ -9,6 +9,7 @@ local TweenService = game:GetService("TweenService")
 
 -- / / MODULES
 
+local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 local _Pickaxe = require(script.Pickaxe)
 
 -- / / VARIABLES
@@ -67,6 +68,8 @@ end
 local function CreateOre(DropperName, OreTable)
     local Ore: Instance = ReplicatedStorage:WaitForChild("Ores"):WaitForChild(OreTable[1]):Clone()
     Ore:SetAttribute("ID", OreTable[2])
+    Ore:SetAttribute("TotalHealth", _Settings.Ores[OreTable[1]]["Health"])
+    Ore:SetAttribute("Health", _Settings.Ores[OreTable[1]]["Health"])
 
     Ore.Position = workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Droppers"):WaitForChild(DropperName):WaitForChild("Drop").Position
     Ore.Parent = workspace:WaitForChild("ActiveOres")

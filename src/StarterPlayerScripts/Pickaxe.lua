@@ -30,6 +30,21 @@ local Functions = ReplicatedStorage:WaitForChild("Functions")
 local ActivateFunction: RemoteFunction = Functions:WaitForChild("Activate")
 local ValidateFunction: RemoteFunction = Functions:WaitForChild("Validate")
 
+-- / / LOCAL FUNCTIOnS
+
+local function FirstTarget(self)
+    local Target = Mouse.Target
+
+    if not Target then return end
+    if not Target.Parent then return end
+
+    if Target.Parent ~= ActiveOres then return end
+
+    if self.Target == Target then return end
+
+    self.Target = Target
+end
+
 -- / / FUNCTIONS
 
 function _Pickaxe.New(Type: string)
@@ -41,6 +56,7 @@ function _Pickaxe.New(Type: string)
 
     self.Target = nil
     self.Highlight = nil
+    self.Connection = nil
 
     self.Tool = LocalPlayer:WaitForChild("Backpack"):WaitForChild("Pickaxe")
     self.Listen = self:Listen()
@@ -112,11 +128,34 @@ function _Pickaxe:Activate()
     local Tick = workspace:GetServerTimeNow()
     ActivationTicks[Tick] = true
 
+    ActivateFunction:InvokeServer() -- Tell the server that we are activating this pickaxe
+
+    local Strength = _Settings.Pickaxes[self.Type]["Strength"]
+    local Damage = _Settings.Pickaxes[self.Type]["Speed"]
+
     self.Active = true
+
+    FirstTarget(self)
+
+    self.Connection = Mouse.Move:Connect(function()
+        local MouseTarget = Mouse.Target
+
+        if not MouseTarget then return end
+        if not MouseTarget.Parent then return end
+
+        if MouseTarget.Parent ~= ActiveOres then return end
+
+        if self.Target == MouseTarget then return end
+
+        self.Target = MouseTarget
+    end)
+
     coroutine.wrap(function()
         while self.Active == true do
+            local Target = self.Target
             task.wait(.1)
 
+            if self.Target ~= Target then return end
             if not ActivationTicks[Tick] then return end
             if self.Active == false then return end
 
@@ -128,6 +167,9 @@ end
 function _Pickaxe:Deactivate()
     self.Active = false
     table.clear(ActivationTicks)
+
+    self.Connection:Disconnect()
+    self.Connection = nil
 end
 
 function _Pickaxe:Equip()
