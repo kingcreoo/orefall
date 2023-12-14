@@ -57,7 +57,7 @@ local function SelectOre(Luck: number) -- Set up only for selecting ores. Do not
 end
 
 local function GenerateOreID()
-    local ID = tostring(ServerStartTime + workspace:GetServerTimeNow()) .. "-"
+    local ID = tostring(workspace:GetServerTimeNow() - ServerStartTime) .. "-"
 
     for _ = 1, 8 do
         local RandomNumber = math.random(1, string.len(Characters))
