@@ -71,6 +71,12 @@ local function LoadPlayer(Player: Player)
 
     _Data.Set(Player, PlayerData)
 
+
+    local pickaxe = Instance.new("StringValue")
+    pickaxe.Parent = Player
+    pickaxe.Name = "pickaxe"
+    pickaxe.Value = PlayerData["Pickaxe"]
+    
     local leaderstats = Instance.new("Folder") -- These two blocks: create leaderstats intvalues
     leaderstats.Name = "leaderstats"
     leaderstats.Parent = Player

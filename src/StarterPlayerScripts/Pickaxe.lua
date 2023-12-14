@@ -40,16 +40,13 @@ local function FirstTarget(self)
 
     if Target.Parent ~= ActiveOres then return end
 
-    if self.Target == Target then return end
-
-    self.Target = Target
+    return Target
 end
 
 -- / / FUNCTIONS
 
-function _Pickaxe.New(Type: string)
+function _Pickaxe.New()
     local self = setmetatable({}, _Pickaxe)
-    self.Type = Type
 
     self.Active = false
     self.Equipped = false
@@ -64,6 +61,10 @@ function _Pickaxe.New(Type: string)
     self.Connections = {}
 
     return self
+end
+
+function _Pickaxe:Set(Type: string)
+    self.Type = Type
 end
 
 function _Pickaxe:Listen()
@@ -134,8 +135,7 @@ function _Pickaxe:Activate()
     local Damage = _Settings.Pickaxes[self.Type]["Speed"]
 
     self.Active = true
-
-    FirstTarget(self)
+    self.Target = FirstTarget()
 
     self.Connection = Mouse.Move:Connect(function()
         local MouseTarget = Mouse.Target

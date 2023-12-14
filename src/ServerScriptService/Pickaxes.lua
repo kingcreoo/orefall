@@ -25,6 +25,8 @@ function _Pickaxes.Equip(Player: Player, PickaxeType: string)
         OldPickaxe:Destroy()
     end
 
+    Player:WaitForChild('pickaxe').Value = PickaxeType
+
     local Pickaxe = _Settings.Pickaxes[PickaxeType]["Model"]:Clone() -- Get new pickaxe for player
     Pickaxe.Parent = Player:WaitForChild("Backpack") -- Place new pickaxe in player's inventory
     Pickaxe.Name = "Pickaxe"
