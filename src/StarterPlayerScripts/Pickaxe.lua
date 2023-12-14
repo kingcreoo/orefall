@@ -15,6 +15,8 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / VARIABLES
 
+local ActivationTicks = {}
+
 local LocalPlayer: Player = Players.LocalPlayer
 local Mouse: Mouse = LocalPlayer:GetMouse()
 
@@ -98,7 +100,7 @@ end
 
 function _Pickaxe:Highlight(Target: Part)
     if not Target then
-        if Highlight.Adornee ~= Limbo then return end
+        if Highlight.Adornee == Limbo then return end
         Highlight.Adornee = Limbo
         return
     end
@@ -107,11 +109,15 @@ function _Pickaxe:Highlight(Target: Part)
 end
 
 function _Pickaxe:Activate()
+    local Tick = workspace:GetServerTimeNow()
+    ActivationTicks[Tick] = true
+
     self.Active = true
     coroutine.wrap(function()
         while self.Active == true do
             task.wait(.1)
 
+            if not ActivationTicks[Tick] then return end
             if self.Active == false then return end
 
             print(.1)
@@ -121,6 +127,7 @@ end
 
 function _Pickaxe:Deactivate()
     self.Active = false
+    table.clear(ActivationTicks)
 end
 
 function _Pickaxe:Equip()
