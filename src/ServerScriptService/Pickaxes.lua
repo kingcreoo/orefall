@@ -27,6 +27,7 @@ function _Pickaxes.Equip(Player: Player, PickaxeType: string)
 
     local Pickaxe = _Settings.Pickaxes[PickaxeType]["Model"]:Clone() -- Get new pickaxe for player
     Pickaxe.Parent = Player:WaitForChild("Backpack") -- Place new pickaxe in player's inventory
+    Pickaxe.Name = "Pickaxe"
 
     EquipEvent:FireClient(Player, PickaxeType)
 end

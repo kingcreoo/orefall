@@ -15,8 +15,8 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / VARIABLES
 
-local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
+local LocalPlayer: Player = Players.LocalPlayer
+local Mouse: Mouse = LocalPlayer:GetMouse()
 
 local Events = ReplicatedStorage:WaitForChild("Events")
 local Functions = ReplicatedStorage:WaitForChild("Functions")
@@ -32,18 +32,69 @@ function _Pickaxe.New(Type: string)
     self.Type = Type
 
     self.Active = false
-    self.Enabled = false
-    self.Target = false
+    self.Equipped = false
+    self.Target = nil
+
+    self.Tool = LocalPlayer:WaitForChild("Backpack"):WaitForChild("Pickaxe")
+    self.Listen = self:Listen()
+
+    self.Connections = {}
 
     return self
 end
 
-function _Pickaxe:Activate()
+function _Pickaxe:Listen()
+    self.Tool.Equipped:Connect(function()
+        self:Equip()
+    end)
 
+    self.Tool.Unequipped:Connect(function()
+        self:Equip()
+    end)
+
+    self.Tool.Activated:Connect(function()
+        self:Activate()
+    end)
+
+    self.Tool.Deactivated:Connect(function()
+        self:Deactivate()
+    end)
+end
+
+function _Pickaxe:Move()
+    if self.Equipped == false then
+        return
+    end
+
+    if self.Target == nil then
+        return
+    end
+end
+
+function _Pickaxe:Activate()
+    print('Activated')
 end
 
 function _Pickaxe:Deactivate()
+    print('Deactivated')
+end
 
+function _Pickaxe:Equip()
+    --local Humanoid: Humanoid = LocalPlayer.Character:WaitForChild("Humanoid")
+
+    if self.Equipped == true then
+        self.Equipped = false
+
+        print('Dequipped')
+
+        --Humanoid:EquipTool(self.Tool) -- For when we create custom pickaxe GUI
+    elseif self.Equipped == false then
+        self.Equipped = true
+
+        print('Equipped')
+
+        --Humanoid:UnequipTools() -- For when we create custom pickaxe GUI
+    end
 end
 
 function _Pickaxe:Destroy()
