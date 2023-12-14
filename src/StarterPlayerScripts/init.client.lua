@@ -1,0 +1,71 @@
+-- / / Client, created by KingCreoo on 12/11/23
+
+-- / / SERVICES
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local TweenService = game:GetService("TweenService")
+
+-- / / MODULES
+
+-- / / VARIABLES
+
+local LocalPlayer: Player = Players.LocalPlayer
+local LocalGui: PlayerGui = LocalPlayer.PlayerGui
+local LoadingScreen: ScreenGui = LocalGui:WaitForChild("Load")
+
+local Events: Folder = ReplicatedStorage:WaitForChild("Events")
+local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
+local DropEvent: RemoteEvent = Events:WaitForChild("Drop")
+
+local LoadingScreenInfo = TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
+
+-- / / FUNCTIONS
+
+local function PlayerLoaded() -- Player has been fully loaded. End load screen.
+    print(LocalPlayer.Name .. " has been loaded.")
+
+    task.wait(2) -- For now. To make the player feel as if their is an actual load time.
+    -- When the game has actual stuff to load, we will remove this.
+
+    local LastTween
+    for _, Item in pairs(LoadingScreen:GetChildren()) do
+        local Tween
+        if Item.ClassName == "Frame" then
+            Tween = TweenService:Create(Item, LoadingScreenInfo, {Transparency = 1})
+        elseif Item.ClassName == "ImageLabel" then
+            Tween = TweenService:Create(Item, LoadingScreenInfo, {ImageTransparency = 1})
+        elseif Item.ClassName == "TextLabel" then
+            Tween = TweenService:Create(Item, LoadingScreenInfo, {TextTransparency = 1})
+        end
+        Tween:Play()
+
+        LastTween = Tween
+    end
+
+    LastTween.Completed:Connect(function()
+        LoadingScreen.Enabled = false
+        task.wait(1)
+        LoadingScreen:Destroy()
+    end)
+end
+
+local function CreateOre(DropperName, OreTable)
+    local Ore: Instance = ReplicatedStorage:WaitForChild("Ores"):WaitForChild(OreTable[1]):Clone()
+    Ore:SetAttribute("ID", OreTable[2])
+
+    Ore.Position = workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Droppers"):WaitForChild(DropperName):WaitForChild("Drop").Position
+    Ore.Parent = workspace:WaitForChild("ActiveOres")
+end
+
+-- / / REMOTES
+
+LoadEvent.OnClientEvent:Connect(PlayerLoaded)
+DropEvent.OnClientEvent:Connect(function(DropTable)
+    for DropperName, OreTable in pairs(DropTable) do
+        CreateOre(DropperName, OreTable)
+    end
+end)
+
+-- / / EVENTS
