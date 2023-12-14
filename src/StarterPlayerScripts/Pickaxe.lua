@@ -73,19 +73,32 @@ end
 function _Pickaxe:Move()
     local Target = Mouse.Target
 
-    if not Target then return end
+    if not Target then 
+        self:Highlight() 
+        return 
+    end
 
-    if not Target.Parent then return end
+    if not Target.Parent then 
+        self:Highlight() 
+        return 
+    end
 
-    if Target.Parent ~= ActiveOres then return end
+    if Target.Parent ~= ActiveOres then 
+        self:Highlight() 
+        return 
+    end
 
-    if self.Equipped == false then return end
+    if self.Equipped == false then 
+        self:Highlight() 
+        return 
+    end
 
     self:Highlight(Target)
 end
 
 function _Pickaxe:Highlight(Target: Part)
     if not Target then
+        if Highlight.Adornee ~= Limbo then return end
         Highlight.Adornee = Limbo
         return
     end
@@ -94,11 +107,20 @@ function _Pickaxe:Highlight(Target: Part)
 end
 
 function _Pickaxe:Activate()
+    self.Active = true
+    coroutine.wrap(function()
+        while self.Active == true do
+            task.wait(.1)
 
+            if self.Active == false then return end
+
+            print(.1)
+        end
+    end)()
 end
 
 function _Pickaxe:Deactivate()
-
+    self.Active = false
 end
 
 function _Pickaxe:Equip()
