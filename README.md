@@ -11,3 +11,9 @@ https://trello.com/invite/b/MtD06f44/ATTI6c4943b7ac7ffdf946bc9a251356cbb5625FA19
 
 - Layout game files
 - Publish to ROBLOX
+
+#### Version 0.1.0
+
+- Add framework. Upon join players are assigned a tower.
+- Add datastore. Player data is saved securely and reconciles with new updates automatically.
+- Add ore droppers. Ores are generated randomly based off of a rarity. Generates secure IDs for each ore to prevent exploitation.
