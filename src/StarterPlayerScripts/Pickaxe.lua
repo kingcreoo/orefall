@@ -52,6 +52,7 @@ function _Pickaxe.New()
     self.Equipped = false
 
     self.Target = nil
+    self.TargetTick = nil
     self.Highlight = nil
     self.Connection = nil
 
@@ -140,24 +141,23 @@ function _Pickaxe:Activate()
     self.Connection = Mouse.Move:Connect(function()
         local MouseTarget = Mouse.Target
 
-        if not MouseTarget then return end
-        if not MouseTarget.Parent then return end
-
-        if MouseTarget.Parent ~= ActiveOres then return end
-
-        if self.Target == MouseTarget then return end
+        if not MouseTarget or not MouseTarget.Parent or MouseTarget.Parent ~= ActiveOres or self.Target == MouseTarget then
+            self.Target = nil
+            self.TargetTick = nil
+            return
+        end
 
         self.Target = MouseTarget
+        self.TargetTick = workspace:GetServerTimeNow()
     end)
 
     coroutine.wrap(function()
         while self.Active == true do
             local Target = self.Target
+            local TargetTick = self.TargetTick
             task.wait(.1)
 
-            if self.Target ~= Target then return end
-            if not ActivationTicks[Tick] then return end
-            if self.Active == false then return end
+            if not Target or not self.Target or self.Target ~= Target or self.TargetTick ~= TargetTick or not ActivationTicks[Tick] or self.Active == false then continue end
 
             print(.1)
         end
