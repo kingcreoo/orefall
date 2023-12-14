@@ -13,6 +13,7 @@ local Players = game:GetService("Players")
 -- / / VARIABLES
 
 local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
 
 -- / / FUNCTIONS
 
