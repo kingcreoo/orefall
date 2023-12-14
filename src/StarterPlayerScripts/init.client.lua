@@ -34,7 +34,8 @@ local function EquipPickaxe(PickaxeType)
         EquippedPickaxe:Destroy()
     end
 
-    EquippedPickaxe = _Pickaxe:New(PickaxeType)
+    EquippedPickaxe = _Pickaxe.New()
+    EquippedPickaxe:Set(PickaxeType)
 end
 
 local function PlayerLoaded() -- Player has been fully loaded. End load screen.
