@@ -11,7 +11,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 -- / / MODULES
 
-local _Settings = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Settings"))
+local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / VARIABLES
 

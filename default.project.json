@@ -9,6 +9,12 @@
       }
     },
 
+    "ReplicatedStorage": {
+      "Settings": {
+        "$path": "src/ReplicatedStorage"
+      }
+    },
+
     "ServerScriptService": {
       "Server": {
         "$path": "src/ServerScriptService"

@@ -9,6 +9,8 @@ local TweenService = game:GetService("TweenService")
 
 -- / / MODULES
 
+local _Pickaxe = require(script.Pickaxe)
+
 -- / / VARIABLES
 
 local LocalPlayer: Player = Players.LocalPlayer
@@ -18,10 +20,21 @@ local LoadingScreen: ScreenGui = LocalGui:WaitForChild("Load")
 local Events: Folder = ReplicatedStorage:WaitForChild("Events")
 local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
 local DropEvent: RemoteEvent = Events:WaitForChild("Drop")
+local EquipEvent: RemoteEvent = Events:WaitForChild("Equip")
 
 local LoadingScreenInfo = TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
 
+local EquippedPickaxe
+
 -- / / FUNCTIONS
+
+local function EquipPickaxe(PickaxeType)
+    if EquippedPickaxe then
+        EquippedPickaxe:Destroy()
+    end
+
+    EquippedPickaxe = _Pickaxe:New(PickaxeType)
+end
 
 local function PlayerLoaded() -- Player has been fully loaded. End load screen.
     print(LocalPlayer.Name .. " has been loaded.")
@@ -67,5 +80,6 @@ DropEvent.OnClientEvent:Connect(function(DropTable)
         CreateOre(DropperName, OreTable)
     end
 end)
+EquipEvent.OnClientEvent:Connect(EquipPickaxe)
 
 -- / / EVENTS

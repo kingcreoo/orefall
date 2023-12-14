@@ -7,13 +7,23 @@ _Pickaxe.__index = _Pickaxe
 -- / / SERVICES
 
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- / / MODULES
+
+local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / VARIABLES
 
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
+
+local Events = ReplicatedStorage:WaitForChild("Events")
+local Functions = ReplicatedStorage:WaitForChild("Functions")
+
+local EquipEvent: RemoteEvent = Events:WaitForChild("Equip")
+local ActivateFunction: RemoteFunction = Functions:WaitForChild("Activate")
+local ValidateFunction: RemoteFunction = Functions:WaitForChild("Validate")
 
 -- / / FUNCTIONS
 
@@ -34,6 +44,10 @@ end
 
 function _Pickaxe:Deactivate()
 
+end
+
+function _Pickaxe:Destroy()
+    self = nil
 end
 
 return _Pickaxe
