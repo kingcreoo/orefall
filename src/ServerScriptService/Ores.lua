@@ -56,8 +56,13 @@ local function SelectOre(Luck: number) -- Set up only for selecting ores. Do not
     return SelectedOre
 end
 
+local function RoundNumberToDecimal(Number, DecimalPlace)
+    local Multiplier = 10 ^ DecimalPlace
+    return math.floor(Number * Multiplier + 0.5) / Multiplier
+end
+
 local function GenerateOreID()
-    local ID = tostring(workspace:GetServerTimeNow() - ServerStartTime) .. "-"
+    local ID = tostring(RoundNumberToDecimal(workspace:GetServerTimeNow() - ServerStartTime, 1)) .. "-"
 
     for _ = 1, 8 do
         local RandomNumber = math.random(1, string.len(Characters))
