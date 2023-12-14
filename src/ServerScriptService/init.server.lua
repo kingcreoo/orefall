@@ -82,7 +82,7 @@ local function LoadPlayer(Player: Player)
         NewValue.Parent = leaderstats
     end
 
-    _Pickaxes.Equip(PlayerData["Pickaxe"]) -- Equip player's pickaxe
+    _Pickaxes.Equip(Player, PlayerData["Pickaxe"]) -- Equip player's pickaxe
 
     local PlayerTower = _Tower.New(Player)
     PlayerTower:Add(Player) -- Create a tower for the player and assign a vacant(now occupied) location.
