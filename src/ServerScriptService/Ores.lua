@@ -15,12 +15,17 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / VARIABLES
 
+local PlayerTimes = {}
+
 local ServerStartTime = workspace:GetServerTimeNow()
 
 local Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_<>"
 local OreDataBase = {}
 
 local Events = ReplicatedStorage:WaitForChild("Events")
+local Functions = ReplicatedStorage:WaitForChild("Functions")
+
+local ActivateFunction: RemoteFunction = Functions:WaitForChild("Activate")
 
 -- / / LOCAL FUNCTIONS
 
@@ -100,5 +105,13 @@ function _Ores.DropForPlayer(Player)
 end
 
 -- / / EVENTS
+
+ActivateFunction.OnServerInvoke = function(Player: Player)
+    PlayerTimes[Player] = {}
+
+    table.insert(PlayerTimes[Player], workspace:GetServerTimeNow())
+
+    return true
+end
 
 return _Ores
