@@ -41,6 +41,7 @@ local function DeepCopy(Table)
 end
 
 local function DeepReconcile(Table0 --[[Default data]], Table1 --[[Player's data]])
+    print("Player's data is not up to date. Reconciling now.")
     for k, v in pairs(Table0) do
         if not Table1[k] then continue end
 
@@ -64,7 +65,7 @@ local function LoadPlayer(Player: Player)
         PlayerData = _Data.NewPlayer(Player)
     else
         if PlayerData["Version"] ~= _Settings.Version then
-            DeepReconcile(_Settings.DefaultData, PlayerData) 
+            DeepReconcile(DeepCopy(_Settings.DefaultData), PlayerData) 
         end
     end
 
@@ -81,7 +82,7 @@ local function LoadPlayer(Player: Player)
         NewValue.Parent = leaderstats
     end
 
-    _Pickaxes.Equip(PlayerData[PlayerData["Pickaxe"]]) -- Equip player's pickaxe
+    _Pickaxes.Equip(PlayerData["Pickaxe"]) -- Equip player's pickaxe
 
     local PlayerTower = _Tower.New(Player)
     PlayerTower:Add(Player) -- Create a tower for the player and assign a vacant(now occupied) location.
