@@ -53,6 +53,7 @@ local function DeepReconcile(Table0 --[[Default data]], Table1 --[[Player's data
             end
         end
     end
+    return Table0
 end
 
 local function LoadPlayer(Player: Player)
@@ -65,7 +66,7 @@ local function LoadPlayer(Player: Player)
         PlayerData = _Data.NewPlayer(Player)
     else
         if PlayerData["Version"] ~= _Settings.Version then
-            DeepReconcile(DeepCopy(_Settings.DefaultData), PlayerData) 
+            PlayerData = DeepReconcile(_Settings.DefaultData, PlayerData)
         end
     end
 
@@ -76,7 +77,7 @@ local function LoadPlayer(Player: Player)
     pickaxe.Parent = Player
     pickaxe.Name = "pickaxe"
     pickaxe.Value = PlayerData["Pickaxe"]
-    
+
     local leaderstats = Instance.new("Folder") -- These two blocks: create leaderstats intvalues
     leaderstats.Name = "leaderstats"
     leaderstats.Parent = Player

@@ -133,7 +133,7 @@ function _Ores.Validate(Player: Player, OreID: string) -- Validate that the play
 
     -- Now we can go about rewarding actual players, who actually mined the ore
 
-    PlayerTimes[Player] = workspace:GetServerTimeNow() - ServerStartTime -- First, set the player's new lastminetime for next calculations
+    PlayerTimes[Player.Name] = workspace:GetServerTimeNow() - ServerStartTime -- First, set the player's new lastminetime for next calculations
 
     local PlayerData = _Data.Get(Player)
     PlayerData["Backpack"][OreType] += 1
@@ -145,7 +145,7 @@ end
 -- / / EVENTS
 
 ActivateFunction.OnServerInvoke = function(Player: Player)
-    PlayerTimes[Player] = workspace:GetServerTimeNow() - ServerStartTime
+    PlayerTimes[Player.Name] = workspace:GetServerTimeNow() - ServerStartTime
 
     return true
 end

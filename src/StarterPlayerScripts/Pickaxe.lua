@@ -168,7 +168,7 @@ function _Pickaxe:Activate()
 
             local Health = Target:GetAttribute("Health")
             if Health - Damage <= 0 then
-                local Success = ValidateFunction.InvokeServer(Target:GetAttribute("ID"))
+                local Success = ValidateFunction:InvokeServer(Target:GetAttribute("ID"))
                 if Success == true then
                     Target:Destroy()
 
