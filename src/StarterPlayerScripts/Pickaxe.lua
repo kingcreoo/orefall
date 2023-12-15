@@ -133,7 +133,7 @@ function _Pickaxe:Activate()
     ActivateFunction:InvokeServer() -- Tell the server that we are activating this pickaxe
 
     local Strength = _Settings.Pickaxes[self.Type]["Strength"]
-    local Damage = _Settings.Pickaxes[self.Type]["Speed"]
+    local Damage = _Settings.Pickaxes[self.Type]["Speed"] / 10
 
     self.Active = true
     self.Target = FirstTarget()
@@ -149,6 +149,11 @@ function _Pickaxe:Activate()
             return
         end
 
+        if self.Target:GetAttribute("Strength") > Strength then
+            warn("Your pickaxe is too weak!")
+            return
+        end
+
         self.Target = MouseTarget
         self.TargetTick += 1
     end)
@@ -161,7 +166,20 @@ function _Pickaxe:Activate()
 
             if not Target or not self.Target or self.Target ~= Target or self.TargetTick ~= TargetTick or not ActivationTicks[Tick] or self.Active == false then continue end
 
-            print(.1)
+            local Health = Target:GetAttribute("Health")
+            if Health - Damage <= 0 then
+                local Success = ValidateFunction.InvokeServer(Target:GetAttribute("ID"))
+                if Success == true then
+                    Target:Destroy()
+
+                    self.Target = nil
+                    self.TargetTick = 0
+                else
+                    warn("Suspected cheater. No reward.")
+                end
+            else
+                Target:SetAttribute("Health", Health - Damage)
+            end
         end
     end)()
 end

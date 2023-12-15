@@ -71,6 +71,7 @@ local function CreateOre(DropperName, OreTable)
     Ore:SetAttribute("ID", OreTable[2])
     Ore:SetAttribute("TotalHealth", _Settings.Ores[OreTable[1]]["Health"])
     Ore:SetAttribute("Health", _Settings.Ores[OreTable[1]]["Health"])
+    Ore:SetAttribute("Strength", _Settings.Ores[OreTable[1]]["Strength"])
 
     Ore.Position = workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Droppers"):WaitForChild(DropperName):WaitForChild("Drop").Position
     Ore.Parent = workspace:WaitForChild("ActiveOres")
