@@ -17,3 +17,11 @@ https://trello.com/invite/b/MtD06f44/ATTI6c4943b7ac7ffdf946bc9a251356cbb5625FA19
 - Add framework. Upon join players are assigned a tower.
 - Add datastore. Player data is saved securely and reconciles with new updates automatically.
 - Add ore droppers. Ores are generated randomly based off of a rarity. Generates secure IDs for each ore to prevent exploitation.
+
+#### Version 0.2.0
+
+- Add pickaxe framework
+- Add pickaxe equip (can equip different pickaxes)
+- Add pickaxe highlight (highlights hovered ore)
+- Add pickaxe mining. Buggy as all hell, but hey it works and I wrote the code for it in ~5-6 hours I'll take it.
+- Add beginning of backpack framework
