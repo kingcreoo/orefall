@@ -11,7 +11,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- / / MODULES
 
-local _Settings = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Settings"))
+local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / FUNCTIONS
 

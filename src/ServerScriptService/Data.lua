@@ -6,7 +6,7 @@ local _Data = {}
 -- / / SERVICES
 
 local Players = game:GetService("Players")
---local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local DataStoreService = game:GetService("DataStoreService")
@@ -14,7 +14,7 @@ local DataStore = DataStoreService:GetDataStore("DataStore")
 
 -- / / MODULES
 
-local _Settings = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Settings"))
+local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / VARIABLES
 

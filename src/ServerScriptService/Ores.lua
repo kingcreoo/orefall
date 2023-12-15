@@ -11,16 +11,30 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 -- / / MODULES
 
-local _Settings = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Settings"))
+local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
+local _Data = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Data"))
 
 -- / / VARIABLES
+
+local PlayerTimes = {}
+
+local ServerStartTime = workspace:GetServerTimeNow()
 
 local Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_<>"
 local OreDataBase = {}
 
 local Events = ReplicatedStorage:WaitForChild("Events")
+local Functions = ReplicatedStorage:WaitForChild("Functions")
+
+local ActivateFunction: RemoteFunction = Functions:WaitForChild("Activate")
+local ValidateFunction: RemoteFunction = Functions:WaitForChild("Validate")
 
 -- / / LOCAL FUNCTIONS
+
+local function RoundNumberToDecimal(Number, DecimalPlace)
+    local Multiplier = 10 ^ DecimalPlace
+    return math.floor(Number * Multiplier + 0.5) / Multiplier
+end
 
 local function DeepCopy(Table)
     local Copy = {}
@@ -55,10 +69,10 @@ local function SelectOre(Luck: number) -- Set up only for selecting ores. Do not
 end
 
 local function GenerateOreID()
-    local ID = tostring(workspace:GetServerTimeNow()) .. "-"
+    local ID = tostring(RoundNumberToDecimal(workspace:GetServerTimeNow() - ServerStartTime, 1)) .. "-"
 
     for _ = 1, 8 do
-        local RandomNumber = string.len(Characters)
+        local RandomNumber = math.random(1, string.len(Characters))
         local RandomCharacter = Characters:sub(RandomNumber, RandomNumber)
 
         ID = ID .. RandomCharacter
@@ -92,6 +106,50 @@ function _Ores.DropForPlayer(Player)
     end)()
 end
 
+function _Ores.Validate(Player: Player, OreID: string) -- Validate that the player has actually mined this ore through a series of checks
+    local OreType = OreDataBase[Player.Name][OreID]
+
+    local TimeOfDestruction = workspace:GetServerTimeNow() - ServerStartTime
+    local Valid = true
+
+    if not OreType then -- First and foremost, if the ore was never created here on the server: we know the player cheated.
+        Valid = false                           -- (or some other weird scenario that should not yield a reward)
+    end
+
+    local TimeOfCreation = string.split(OreID, "-")[1] -- Get the time in which this ore was created (approximately)
+    local TimeToDestroyOre = _Settings.Ores[OreType]["Health"] / _Settings.Pickaxes[Player:WaitForChild("pickaxe").Value]["Speed"]
+    local TimeOfPreviousDestruction = PlayerTimes[Player.Name] -- The time in which player destroyed the last ore (or time of activation)
+    local TimeOreDestroyedIn = TimeOfDestruction - TimeOfCreation
+
+    if TimeOreDestroyedIn + .5 --[[Add buffer]] < TimeToDestroyOre then -- In this case, the ore was destroyed faster than it should have based off of creation and destruction time.
+        Valid = false -- Really what this block does is prevent an autominer that would instantly break ores from where they drop
+    end
+
+    if TimeOfDestruction - TimeOfPreviousDestruction < TimeToDestroyOre then -- In this case, the player is mining the ore too fast
+        Valid = false -- It had been less time to mine this ore since they mined the previous ore, than the ore's time to destroy
+    end
+
+    if not Valid then return false end -- For now, we won't do anything about suspected cheaters. We simply won't reward the player anything.
+
+    -- Now we can go about rewarding actual players, who actually mined the ore
+
+    PlayerTimes[Player.Name] = workspace:GetServerTimeNow() - ServerStartTime -- First, set the player's new lastminetime for next calculations
+
+    local PlayerData = _Data.Get(Player)
+    PlayerData["Backpack"][OreType] += 1
+    _Data.Set(Player, PlayerData)
+
+    return true
+end
+
 -- / / EVENTS
+
+ActivateFunction.OnServerInvoke = function(Player: Player)
+    PlayerTimes[Player.Name] = workspace:GetServerTimeNow() - ServerStartTime
+
+    return true
+end
+
+ValidateFunction.OnServerInvoke = _Ores.Validate
 
 return _Ores

@@ -11,10 +11,11 @@ local DataStore = DataStoreService:GetDataStore("DataStore")
 
 -- / / MODULES
 
-local _Settings = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Settings"))
+local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 local _Tower = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Tower"))
 local _Data = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Data"))
 local _Ores = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Ores"))
+local _Pickaxes = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Pickaxes"))
 
 -- / / VARIABLES
 
@@ -40,6 +41,7 @@ local function DeepCopy(Table)
 end
 
 local function DeepReconcile(Table0 --[[Default data]], Table1 --[[Player's data]])
+    print("Player's data is not up to date. Reconciling now.")
     for k, v in pairs(Table0) do
         if not Table1[k] then continue end
 
@@ -51,6 +53,7 @@ local function DeepReconcile(Table0 --[[Default data]], Table1 --[[Player's data
             end
         end
     end
+    return Table0
 end
 
 local function LoadPlayer(Player: Player)
@@ -63,22 +66,30 @@ local function LoadPlayer(Player: Player)
         PlayerData = _Data.NewPlayer(Player)
     else
         if PlayerData["Version"] ~= _Settings.Version then
-            DeepReconcile(_Settings.DefaultData, PlayerData) 
+            PlayerData = DeepReconcile(_Settings.DefaultData, PlayerData)
         end
     end
 
     _Data.Set(Player, PlayerData)
 
-    local leaderstats = Instance.new("Folder")
+
+    local pickaxe = Instance.new("StringValue")
+    pickaxe.Parent = Player
+    pickaxe.Name = "pickaxe"
+    pickaxe.Value = PlayerData["Pickaxe"]
+
+    local leaderstats = Instance.new("Folder") -- These two blocks: create leaderstats intvalues
     leaderstats.Name = "leaderstats"
     leaderstats.Parent = Player
 
-    for Stat, Value in pairs(PlayerData["leaderstats"]) do
+    for Stat, Value in pairs(PlayerData["leaderstats"]) do --
         local NewValue = Instance.new("IntValue")
         NewValue.Name = Stat
         NewValue.Value = Value
         NewValue.Parent = leaderstats
     end
+
+    _Pickaxes.Equip(Player, PlayerData["Pickaxe"]) -- Equip player's pickaxe
 
     local PlayerTower = _Tower.New(Player)
     PlayerTower:Add(Player) -- Create a tower for the player and assign a vacant(now occupied) location.
