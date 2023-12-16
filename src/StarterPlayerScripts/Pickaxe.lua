@@ -159,6 +159,7 @@ function _Pickaxe:Activate()
 
         if MouseTarget:GetAttribute("Strength") > Strength then
             warn("Your pickaxe is too weak!")
+            self.Tool:Deactivate()
             LocalPlayer.Character.Humanoid:UnequipTools()
             return
         end
