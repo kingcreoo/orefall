@@ -63,7 +63,7 @@ local function Purchase(Pickaxe: TextButton)
     end
 end
 
-for _, Pickaxe: TextButton in pairs(PickaxesFrame:WaitForChild("Pickaxes")) do
+for _, Pickaxe: TextButton in pairs(PickaxesFrame:WaitForChild("Pickaxes"):GetChildren()) do
     Pickaxe.MouseButton1Down:Connect(function()
         if Pickaxe:GetAttribute("State") == 1 then
             Equip(Pickaxe)
