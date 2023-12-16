@@ -113,7 +113,7 @@ function _Pickaxe:FirstTarget()
     if Target:GetAttribute("Strength") > _Settings.Pickaxes[self.Type]["Strength"] then
         warn("Your pickaxe is too weak!")
         LocalPlayer.Character.Humanoid:UnequipTools()
-        return
+        return 1
     end
 
     self.Target = Target
@@ -142,7 +142,17 @@ function _Pickaxe:Activate()
     local Damage = _Settings.Pickaxes[self.Type]["Speed"] / 10
 
     self.Active = true
-    self.Target = self:FirstTarget()
+    local t = self:FirstTarget()
+    if t == 1 then
+        self.Active = false
+        table.clear(ActivationTicks)
+
+        self.Connection = nil
+
+        return
+    else
+        self.Target = t
+    end
 
     self.Connection = Mouse.Move:Connect(function()
         local MouseTarget = Mouse.Target
