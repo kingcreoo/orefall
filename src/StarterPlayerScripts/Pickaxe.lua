@@ -174,8 +174,8 @@ function _Pickaxe:Activate()
 
                     self.Target = nil
                     self.TargetTick = 0
-                else
-                    warn("Suspected cheater. No reward.")
+                --else
+                    --Drop gui here
                 end
             else
                 Target:SetAttribute("Health", Health - Damage)

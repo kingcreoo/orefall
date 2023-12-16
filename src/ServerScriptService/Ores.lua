@@ -114,6 +114,12 @@ function _Ores.Validate(Player: Player, OreID: string) -- Validate that the play
 
     if not OreType then -- First and foremost, if the ore was never created here on the server: we know the player cheated.
         Valid = false                           -- (or some other weird scenario that should not yield a reward)
+        warn("Ore does not exist.")
+    end
+
+    if _Settings.Pickaxes[Player:WaitForChild("pickaxe").Value]["Strength"] < _Settings.Ores[OreType]["Strength"] then -- If the player's pickaxe is too weak
+        Valid = false -- On non-cheater clients, this will be taken care of on the client but we want to check here too
+        warn("Player's pickaxe is too weak.")
     end
 
     local TimeOfCreation = string.split(OreID, "-")[1] -- Get the time in which this ore was created (approximately)
@@ -123,10 +129,12 @@ function _Ores.Validate(Player: Player, OreID: string) -- Validate that the play
 
     if TimeOreDestroyedIn + .5 --[[Add buffer]] < TimeToDestroyOre then -- In this case, the ore was destroyed faster than it should have based off of creation and destruction time.
         Valid = false -- Really what this block does is prevent an autominer that would instantly break ores from where they drop
+        warn("Ore was destroyed too fast #1.")
     end
 
     if TimeOfDestruction - TimeOfPreviousDestruction < TimeToDestroyOre then -- In this case, the player is mining the ore too fast
         Valid = false -- It had been less time to mine this ore since they mined the previous ore, than the ore's time to destroy
+        warn("Ore was destroyed too fast #2.")
     end
 
     if not Valid then return false end -- For now, we won't do anything about suspected cheaters. We simply won't reward the player anything.
