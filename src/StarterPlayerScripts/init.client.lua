@@ -33,7 +33,7 @@ local EquippedPickaxe
 
 local function EquipPickaxe(PickaxeType: string)
     if not EquippedPickaxe then
-        EquippedPickaxe = _Pickaxe.new()
+        EquippedPickaxe = _Pickaxe.New()
     end
     
     LocalGui:WaitForChild("Interacts"):WaitForChild("Pickaxes"):WaitForChild("Equipped").Value = LocalGui:WaitForChild("Interacts"):WaitForChild("Pickaxes"):WaitForChild("Pickaxes"):WaitForChild(PickaxeType)
