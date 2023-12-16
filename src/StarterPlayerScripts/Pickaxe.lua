@@ -112,6 +112,7 @@ function _Pickaxe:FirstTarget()
 
     if Target:GetAttribute("Strength") > _Settings.Pickaxes[self.Type]["Strength"] then
         warn("Your pickaxe is too weak!")
+        self.Tool:Deactivate()
         LocalPlayer.Character.Humanoid:UnequipTools()
         return 1
     end
@@ -143,16 +144,8 @@ function _Pickaxe:Activate()
 
     self.Active = true
     local t = self:FirstTarget()
-    if t == 1 then
-        self.Active = false
-        table.clear(ActivationTicks)
-
-        self.Connection = nil
-
-        return
-    else
-        self.Target = t
-    end
+    if t == 1 then return end
+    self.Target = t
 
     self.Connection = Mouse.Move:Connect(function()
         local MouseTarget = Mouse.Target
@@ -204,7 +197,9 @@ function _Pickaxe:Deactivate()
     self.Active = false
     table.clear(ActivationTicks)
 
-    self.Connection:Disconnect()
+    if self.Connection then
+        self.Connection:Disconnect() 
+    end
     self.Connection = nil
 end
 
