@@ -3,7 +3,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Settings = {}
 
-Settings.Version = "0.2"
+Settings.Version = "0.4"
 
 Settings.Locations = {
     [1] = {["CFrame"] = CFrame.new(40,0,0), ["Occupied"] = false},
@@ -15,6 +15,10 @@ Settings.DefaultData = { -- In the future we will have to write a system that cr
         ["Cash"] = 100
     },
     ["Pickaxe"] = "Level1",
+    ["Pickaxes"] = {
+        ["Level1"] = 1,
+        ["Level2"] = 0
+    },
     ["Backpack"] = {
         ["Coal"] = 0,
         ["Iron"] = 0

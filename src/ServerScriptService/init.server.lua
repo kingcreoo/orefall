@@ -24,6 +24,10 @@ local Towers = {}
 local Events: Folder = ReplicatedStorage:WaitForChild("Events")
 local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
 
+local Functions: Folder = ReplicatedStorage:WaitForChild("Functions")
+local EquipFunction: RemoteFunction = Functions:WaitForChild("Equip")
+local PurchaseFunction: RemoteFunction = Functions:WaitForChild("Purchase")
+
 -- / / FUNCTIONS
 
 local function DeepCopy(Table)
@@ -97,7 +101,7 @@ local function LoadPlayer(Player: Player)
 
     Character:SetPrimaryPartCFrame(PlayerTower.Model:WaitForChild("Teleport").CFrame) -- Teleport the player to the tower's location.
 
-    LoadEvent:FireClient(Player) -- Communicate to the client that player has been loaded.
+    LoadEvent:FireClient(Player, PlayerData) -- Communicate to the client that player has been loaded.
 
     task.wait(1)
 
@@ -113,6 +117,16 @@ local function RemovePlayer(Player: Player)
 end
 
 -- / / REMOTES
+
+EquipFunction.OnServerInvoke = function(Player, PickaxeType)
+    local success = _Pickaxes.Equip(Player, PickaxeType)
+    return success
+end
+
+PurchaseFunction.OnServerInvoke = function(Player, PickaxeType)
+    local result = _Pickaxes.Purchase(Player, PickaxeType)
+    return result
+end
 
 -- / / EVENTS
 
