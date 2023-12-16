@@ -37,8 +37,16 @@ local function FirstTarget(self)
 
     if not Target then return end
     if not Target.Parent then return end
-
     if Target.Parent ~= ActiveOres then return end
+
+    if Target:GetAttribute("Strength") > _Settings.Pickaxes[self.Type]["Strength"] then
+        warn("Your pickaxe is too weak!")
+        LocalPlayer.Character.Humanoid:UnequipTools()
+        return
+    end
+
+    self.Target = Target
+    self.TargetTick += 1
 
     return Target
 end
@@ -143,7 +151,6 @@ function _Pickaxe:Activate()
 
         if not MouseTarget or not MouseTarget.Parent or MouseTarget.Parent ~= ActiveOres then
             self.Target = nil
-            self.TargetTick = 0
             return
         elseif self.Target == MouseTarget then
             return
@@ -151,6 +158,7 @@ function _Pickaxe:Activate()
 
         if MouseTarget:GetAttribute("Strength") > Strength then
             warn("Your pickaxe is too weak!")
+            LocalPlayer.Character.Humanoid:UnequipTools()
             return
         end
 

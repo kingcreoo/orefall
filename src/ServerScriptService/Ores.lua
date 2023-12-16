@@ -132,7 +132,7 @@ function _Ores.Validate(Player: Player, OreID: string) -- Validate that the play
         warn("Ore was destroyed too fast #1.")
     end
 
-    if TimeOfDestruction - TimeOfPreviousDestruction < TimeToDestroyOre then -- In this case, the player is mining the ore too fast
+    if (TimeOfDestruction - TimeOfPreviousDestruction) + .5 --[[Add buffer]] < TimeToDestroyOre then -- In this case, the player is mining the ore too fast
         Valid = false -- It had been less time to mine this ore since they mined the previous ore, than the ore's time to destroy
         warn("Ore was destroyed too fast #2.")
     end
