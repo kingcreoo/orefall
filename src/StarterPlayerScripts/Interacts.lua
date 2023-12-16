@@ -56,7 +56,7 @@ function _Interacts.Setup(PlayerData: table)
         local Prompt: ProximityPrompt = Interact:WaitForChild("Prompt")
 
         Prompt.PromptShown:Connect(function()
-            --[[local T0 = Interact:FindFirstChild("Tween0")
+            local T0 = Interact:FindFirstChild("Tween0")
             if T0 then
                 T0:Destroy()
             end
@@ -77,12 +77,11 @@ function _Interacts.Setup(PlayerData: table)
             local Tween1 = TweenService:Create(InteractsGui:WaitForChild(Interact.Name), Info, {Size = UDim2.new(.612, 0, .714, 0)})
             Tween1.Parent = Interact
             Tween1.Name = "Tween1"
-            Tween1:Play()]]
-            InteractsGui:WaitForChild(Interact.Name).Vislble = true
+            Tween1:Play()
         end)
 
         Prompt.PromptHidden:Connect(function()
-            --[[local Tween0 = TweenService:Create(workspace.CurrentCamera, Info, {FieldOfView = 85}):Play()
+            local Tween0 = TweenService:Create(workspace.CurrentCamera, Info, {FieldOfView = 85}):Play()
             Tween0.Parent = Interact
             Tween0.Name = "Tween0"
             Tween0:Play()
@@ -93,9 +92,8 @@ function _Interacts.Setup(PlayerData: table)
             Tween1:Play()
 
             Tween0.Completed:Connect(function()
-                InteractsGui:WaitForChild(Interact.Name).Vislble = false
-            end)]]
-            InteractsGui:WaitForChild(Interact.Name).Vislble = false
+                InteractsGui:WaitForChild(Interact.Name).Visible = false
+            end)
         end)
     end
 end
