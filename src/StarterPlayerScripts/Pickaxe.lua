@@ -30,27 +30,6 @@ local Functions = ReplicatedStorage:WaitForChild("Functions")
 local ActivateFunction: RemoteFunction = Functions:WaitForChild("Activate")
 local ValidateFunction: RemoteFunction = Functions:WaitForChild("Validate")
 
--- / / LOCAL FUNCTIOnS
-
-local function FirstTarget(self)
-    local Target = Mouse.Target
-
-    if not Target then return end
-    if not Target.Parent then return end
-    if Target.Parent ~= ActiveOres then return end
-
-    if Target:GetAttribute("Strength") > _Settings.Pickaxes[self.Type]["Strength"] then
-        warn("Your pickaxe is too weak!")
-        LocalPlayer.Character.Humanoid:UnequipTools()
-        return
-    end
-
-    self.Target = Target
-    self.TargetTick += 1
-
-    return Target
-end
-
 -- / / FUNCTIONS
 
 function _Pickaxe.New()
@@ -124,6 +103,25 @@ function _Pickaxe:Move()
     self:Highlight(Target)
 end
 
+function _Pickaxe:FirstTarget()
+    local Target = Mouse.Target
+
+    if not Target then return end
+    if not Target.Parent then return end
+    if Target.Parent ~= ActiveOres then return end
+
+    if Target:GetAttribute("Strength") > _Settings.Pickaxes[self.Type]["Strength"] then
+        warn("Your pickaxe is too weak!")
+        LocalPlayer.Character.Humanoid:UnequipTools()
+        return
+    end
+
+    self.Target = Target
+    self.TargetTick += 1
+
+    return Target
+end
+
 function _Pickaxe:Highlight(Target: Part)
     if not Target then
         if Highlight.Adornee == Limbo then return end
@@ -144,7 +142,7 @@ function _Pickaxe:Activate()
     local Damage = _Settings.Pickaxes[self.Type]["Speed"] / 10
 
     self.Active = true
-    self.Target = FirstTarget()
+    self.Target = self:FirstTarget()
 
     self.Connection = Mouse.Move:Connect(function()
         local MouseTarget = Mouse.Target
