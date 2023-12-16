@@ -32,6 +32,10 @@ local EquippedPickaxe
 -- / / FUNCTIONS
 
 local function EquipPickaxe(PickaxeType: string)
+    if not EquippedPickaxe then
+        EquippedPickaxe = _Pickaxe.new()
+    end
+    
     LocalGui:WaitForChild("Interacts"):WaitForChild("Pickaxes"):WaitForChild("Equipped").Value = LocalGui:WaitForChild("Interacts"):WaitForChild("Pickaxes"):WaitForChild("Pickaxes"):WaitForChild(PickaxeType)
     EquippedPickaxe:Set(PickaxeType)
 end
