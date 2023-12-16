@@ -149,7 +149,7 @@ function _Pickaxe:Activate()
             return
         end
 
-        if self.Target:GetAttribute("Strength") > Strength then
+        if MouseTarget:GetAttribute("Strength") > Strength then
             warn("Your pickaxe is too weak!")
             return
         end
