@@ -81,12 +81,12 @@ function _Interacts.Setup(PlayerData: table)
         end)
 
         Prompt.PromptHidden:Connect(function()
-            local Tween0 = TweenService:Create(workspace.CurrentCamera, Info, {FieldOfView = 85}):Play()
+            local Tween0 = TweenService:Create(workspace.CurrentCamera, Info, {FieldOfView = 85})
             Tween0.Parent = Interact
             Tween0.Name = "Tween0"
             Tween0:Play()
 
-            local Tween1 = TweenService:Create(InteractsGui:WaitForChild(Interact.Name), Info, {Size = UDim2.new(0,0,0,0)}):Play()
+            local Tween1 = TweenService:Create(InteractsGui:WaitForChild(Interact.Name), Info, {Size = UDim2.new(0,0,0,0)})
             Tween1.Parent = Interact
             Tween1.Name = "Tween1"
             Tween1:Play()
