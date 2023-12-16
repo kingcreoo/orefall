@@ -32,13 +32,7 @@ local EquippedPickaxe
 -- / / FUNCTIONS
 
 local function EquipPickaxe(PickaxeType: string)
-    if EquippedPickaxe then
-        EquippedPickaxe:Destroy()
-    end
-
     LocalGui:WaitForChild("Interacts"):WaitForChild("Pickaxes"):WaitForChild("Equipped").Value = LocalGui:WaitForChild("Interacts"):WaitForChild("Pickaxes"):WaitForChild("Pickaxes"):WaitForChild(PickaxeType)
-
-    EquippedPickaxe = _Pickaxe.New()
     EquippedPickaxe:Set(PickaxeType)
 end
 

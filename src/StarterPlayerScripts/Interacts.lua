@@ -69,7 +69,7 @@ function _Interacts.Setup(PlayerData: table)
             InteractsGui:WaitForChild(Interact.Name).Size = UDim2.new(0,0,0,0)
             InteractsGui:WaitForChild(Interact.Name).Visible = true
 
-            local Tween0 = TweenService:Create(workspace.CurrentCamera, Info, {FieldOfView = 85})
+            local Tween0 = TweenService:Create(workspace.CurrentCamera, Info, {FieldOfView = 80})
             Tween0.Parent = Interact
             Tween0.Name = "Tween0"
             Tween0:Play()
@@ -81,7 +81,7 @@ function _Interacts.Setup(PlayerData: table)
         end)
 
         Prompt.PromptHidden:Connect(function()
-            local Tween0 = TweenService:Create(workspace.CurrentCamera, Info, {FieldOfView = 85})
+            local Tween0 = TweenService:Create(workspace.CurrentCamera, Info, {FieldOfView = 70})
             Tween0.Parent = Interact
             Tween0.Name = "Tween0"
             Tween0:Play()

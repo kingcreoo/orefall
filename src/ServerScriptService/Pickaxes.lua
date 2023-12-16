@@ -29,17 +29,13 @@ function _Pickaxes.Equip(Player: Player, PickaxeType: string)
         return false
     end
 
-    local OldPickaxe = Player:WaitForChild("Backpack"):FindFirstChild("Pickaxe")
-    if OldPickaxe then -- Remove player's old pickaxe
-        OldPickaxe:Destroy()
-    end
+    local Pickaxe = Player:WaitForChild("Backpack"):FindFirstChild("Pickaxe")
+    local Handle: Part = _Settings.Pickaxes[PickaxeType]["Model"]:WaitForChild("Handle"):Clone() -- Get new pickaxe for player
+
+    Pickaxe:WaitForChild("Handle"):Destroy()
+    Handle.Parent = Pickaxe -- Place new pickaxe in player's inventory
 
     Player:WaitForChild('pickaxe').Value = PickaxeType
-
-    local Pickaxe = _Settings.Pickaxes[PickaxeType]["Model"]:Clone() -- Get new pickaxe for player
-    Pickaxe.Parent = Player:WaitForChild("Backpack") -- Place new pickaxe in player's inventory
-    Pickaxe.Name = "Pickaxe"
-
     EquipEvent:FireClient(Player, PickaxeType)
 
     return true
