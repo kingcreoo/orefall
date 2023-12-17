@@ -11,6 +11,9 @@ local TweenService = game:GetService("TweenService")
 
 local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 local _Pickaxe = require(script.Pickaxe)
+local _Button = require(script.Button)
+local _Interacts = require(script.Interacts)
+local _UI = require(script.UI)
 
 -- / / VARIABLES
 
@@ -29,17 +32,21 @@ local EquippedPickaxe
 
 -- / / FUNCTIONS
 
-local function EquipPickaxe(PickaxeType)
-    if EquippedPickaxe then
-        EquippedPickaxe:Destroy()
+local function EquipPickaxe(PickaxeType: string)
+    if not EquippedPickaxe then
+        EquippedPickaxe = _Pickaxe.New()
     end
-
-    EquippedPickaxe = _Pickaxe.New()
+    
+    LocalGui:WaitForChild("Interacts"):WaitForChild("Pickaxes"):WaitForChild("Equipped").Value = LocalGui:WaitForChild("Interacts"):WaitForChild("Pickaxes"):WaitForChild("Pickaxes"):WaitForChild(PickaxeType)
     EquippedPickaxe:Set(PickaxeType)
 end
 
-local function PlayerLoaded() -- Player has been fully loaded. End load screen.
-    print(LocalPlayer.Name .. " has been loaded.")
+local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. End load screen.
+    _Interacts.Setup(PlayerData)
+
+    for _, Button: Model in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Buttons"):GetChildren()) do
+        local CreateButton = _Button.new(Button)
+    end
 
     task.wait(2) -- For now. To make the player feel as if their is an actual load time.
     -- When the game has actual stuff to load, we will remove this.

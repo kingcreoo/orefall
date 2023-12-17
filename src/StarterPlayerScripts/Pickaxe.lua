@@ -30,19 +30,6 @@ local Functions = ReplicatedStorage:WaitForChild("Functions")
 local ActivateFunction: RemoteFunction = Functions:WaitForChild("Activate")
 local ValidateFunction: RemoteFunction = Functions:WaitForChild("Validate")
 
--- / / LOCAL FUNCTIOnS
-
-local function FirstTarget(self)
-    local Target = Mouse.Target
-
-    if not Target then return end
-    if not Target.Parent then return end
-
-    if Target.Parent ~= ActiveOres then return end
-
-    return Target
-end
-
 -- / / FUNCTIONS
 
 function _Pickaxe.New()
@@ -116,6 +103,26 @@ function _Pickaxe:Move()
     self:Highlight(Target)
 end
 
+function _Pickaxe:FirstTarget()
+    local Target = Mouse.Target
+
+    if not Target then return end
+    if not Target.Parent then return end
+    if Target.Parent ~= ActiveOres then return end
+
+    if Target:GetAttribute("Strength") > _Settings.Pickaxes[self.Type]["Strength"] then
+        warn("Your pickaxe is too weak!")
+        self.Tool:Deactivate()
+        LocalPlayer.Character.Humanoid:UnequipTools()
+        return 1
+    end
+
+    self.Target = Target
+    self.TargetTick += 1
+
+    return Target
+end
+
 function _Pickaxe:Highlight(Target: Part)
     if not Target then
         if Highlight.Adornee == Limbo then return end
@@ -136,21 +143,24 @@ function _Pickaxe:Activate()
     local Damage = _Settings.Pickaxes[self.Type]["Speed"] / 10
 
     self.Active = true
-    self.Target = FirstTarget()
+    local t = self:FirstTarget()
+    if t == 1 then return end
+    self.Target = t
 
     self.Connection = Mouse.Move:Connect(function()
         local MouseTarget = Mouse.Target
 
         if not MouseTarget or not MouseTarget.Parent or MouseTarget.Parent ~= ActiveOres then
             self.Target = nil
-            self.TargetTick = 0
             return
         elseif self.Target == MouseTarget then
             return
         end
 
-        if self.Target:GetAttribute("Strength") > Strength then
+        if MouseTarget:GetAttribute("Strength") > Strength then
             warn("Your pickaxe is too weak!")
+            self.Tool:Deactivate()
+            LocalPlayer.Character.Humanoid:UnequipTools()
             return
         end
 
@@ -174,8 +184,8 @@ function _Pickaxe:Activate()
 
                     self.Target = nil
                     self.TargetTick = 0
-                else
-                    warn("Suspected cheater. No reward.")
+                --else
+                    --Drop gui here
                 end
             else
                 Target:SetAttribute("Health", Health - Damage)
@@ -188,7 +198,9 @@ function _Pickaxe:Deactivate()
     self.Active = false
     table.clear(ActivationTicks)
 
-    self.Connection:Disconnect()
+    if self.Connection then
+        self.Connection:Disconnect() 
+    end
     self.Connection = nil
 end
 
