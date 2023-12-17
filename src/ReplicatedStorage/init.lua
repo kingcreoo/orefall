@@ -74,15 +74,18 @@ Settings.Pickaxes = {
 Settings.Droppers = {
     ["Dropper1"] = {
         ["Name"] = "Dropper1",
-        ["Value"] = 0
+        ["Value"] = 0,
+        ["Luck"] = 1
     },
     ["Dropper2"] = {
         ["Name"] = "Dropper2",
-        ["Value"] = 100
+        ["Value"] = 100,
+        ["Luck"] = 1
     },
     ["Dropper3"] = {
         ["Name"] = "Dropper3",
-        ["Value"] = 250
+        ["Value"] = 250,
+        ["Luck"] = 1
     }
 }
 
