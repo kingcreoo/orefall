@@ -100,7 +100,7 @@ local function Refine(Player: Player, Ore: string, Time: number)
     PlayerQueues[Player.Name][Ore] -= 1 -- remove 1 from this ore's queue
     PlayerData["leaderstats"]["Cash"] += _Settings.Ores[Ore]["Reward"] -- add to player's cash
     _Data.Set(Player, PlayerData) -- set data
-    Player:WaitForChild("leaderstats"):WaitForChild("Cash").Value += PlayerData["leaderstats"]["Cash"] -- set leaderstats
+    Player:WaitForChild("leaderstats"):WaitForChild("Cash").Value = PlayerData["leaderstats"]["Cash"] -- set leaderstats
 
     until PlayerQueues[Player.Name][Ore] <= 0
 
