@@ -95,7 +95,7 @@ function _Ores.DropForPlayer(Player)
             local DropTable = {}
 
             for _, Dropper in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Droppers"):GetChildren()) do
-                if not PlayerData["Droppers"][Dropper.Name] == 1 then continue end
+                if PlayerData["Droppers"][Dropper.Name] ~= 1 then continue end
 
                 local SelectedOre = SelectOre(Luck) -- Choose an ore
 
