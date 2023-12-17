@@ -94,7 +94,7 @@ function _Button:CloseInfo()
     Tween.Parent = self.Model.Touch
     Tween:Play()
 
-    Tween.Completed:Conenct(function()
+    Tween.Completed:Connect(function()
         self.Model.Touch.BillboardGui.Enabled = false
     end)
 end
