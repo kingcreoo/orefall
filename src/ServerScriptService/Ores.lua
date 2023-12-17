@@ -88,11 +88,15 @@ function _Ores.DropForPlayer(Player)
 
     coroutine.wrap(function()
         while Players:FindFirstChild(Player.Name) do
+            local PlayerData = _Data.Get(Player)
+
             task.wait(4) -- In the future, find this time based off of player's boosts & server boosts
             local Luck = 1 -- In the future, find this luck based off dropper's luck, player's luck, & boosts
             local DropTable = {}
 
             for _, Dropper in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Droppers"):GetChildren()) do
+                if not PlayerData["Droppers"][Dropper.Name] == 1 then continue end
+
                 local SelectedOre = SelectOre(Luck) -- Choose an ore
 
                 local OreID = GenerateOreID() -- Create an ID for the ore
