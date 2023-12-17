@@ -74,8 +74,8 @@ function _Button.new(Button: Model)
 end
 
 function _Button:Load()
-    if not self then return end
-    
+    if not self or not self.Model then return end
+
     if Cash.Value >= self.Settings["Value"] then
         self.Model.Color.Color = Green
         self.Model.Touch.BillboardGui.Cash.TextColor3 = Green
