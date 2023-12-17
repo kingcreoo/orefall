@@ -62,6 +62,10 @@ function _Button.new(Button: Model)
         self:CloseInfo()
     end)
 
+    self.Model.Destroying:Connect(function()
+        self = nil
+    end)
+
     return self
 end
 
@@ -76,9 +80,6 @@ function _Button:Load()
 end
 
 function _Button:ShowInfo()
-    if not self.Model:FindFirstChild("Touch") then return end
-
-
     local Tween0 = self.Model.Touch:FindFirstChild("Tween")
     if Tween0 then
         Tween0:Destroy()
@@ -93,8 +94,6 @@ function _Button:ShowInfo()
 end
 
 function _Button:CloseInfo()
-    if not self.Model:FindFirstChild("Touch") then return end
-
     local Tween = TweenService:Create(self.Model.Touch.BillboardGui, Info, {Size = UDim2.new(0,0,0,0)})
     Tween.Parent = self.Model.Touch
     Tween:Play()
