@@ -188,7 +188,7 @@ function _Ores.Refine(Player: Player)
     local Backpack = PlayerData["Backpack"]
 
     for Ore, Amount in pairs(Backpack) do
-        PlayerQueues[Ore] += Amount
+        PlayerQueues[Player.Name][Ore] += Amount
     end
 
     RefineEvent:FireClient(Player)
