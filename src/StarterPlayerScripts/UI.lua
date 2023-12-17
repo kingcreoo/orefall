@@ -109,7 +109,7 @@ end
 
 -- / / REMOTES
 
-RefineEvent.OnClientEvent:Conneect(function()
+RefineEvent.OnClientEvent:Connect(function()
     _UI.BackpackClear()
 end)
 
