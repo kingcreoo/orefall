@@ -97,7 +97,7 @@ local function LoadPlayer(Player: Player)
 
     local PlayerTower = _Tower.New(Player)
     PlayerTower:Add(Player) -- Create a tower for the player and assign a vacant(now occupied) location.
-    PlayerTower:Load(PlayerData) -- Load the tower's data
+    PlayerTower:Load(Player, PlayerData) -- Load the tower's data
     Towers[Player.Name] = PlayerTower
 
     Character:SetPrimaryPartCFrame(PlayerTower.Model:WaitForChild("Teleport").CFrame) -- Teleport the player to the tower's location.
