@@ -11,6 +11,7 @@ local TweenService = game:GetService("TweenService")
 
 local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 local _Pickaxe = require(script.Pickaxe)
+local _Button = require(script.Button)
 local _Interacts = require(script.Interacts)
 local _UI = require(script.UI)
 
@@ -42,6 +43,10 @@ end
 
 local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. End load screen.
     _Interacts.Setup(PlayerData)
+
+    for _, Button: Model in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Buttons"):GetChildren()) do
+        local CreateButton = _Button.new(Button)
+    end
 
     task.wait(2) -- For now. To make the player feel as if their is an actual load time.
     -- When the game has actual stuff to load, we will remove this.
