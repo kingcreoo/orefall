@@ -3,7 +3,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Settings = {}
 
-Settings.Version = "0.4"
+Settings.Version = "0.5.1"
 
 Settings.Locations = {
     [1] = {["CFrame"] = CFrame.new(40,0,0), ["Occupied"] = false},
@@ -18,6 +18,11 @@ Settings.DefaultData = { -- In the future we will have to write a system that cr
     ["Pickaxes"] = {
         ["Level1"] = 1,
         ["Level2"] = 0
+    },
+    ["Droppers"] = {
+        ["Dropper1"] = 0,
+        ["Dropper2"] = 0,
+        ["Dropper3"] = 0
     },
     ["Backpack"] = {
         ["Coal"] = 0,
@@ -63,6 +68,21 @@ Settings.Pickaxes = {
         ["Strength"] = 2,
         ["Speed"] = 2,
         ["Price"] = 100
+    }
+}
+
+Settings.Droppers = {
+    ["Dropper1"] = {
+        ["Name"] = "Dropper1",
+        ["Value"] = 0
+    },
+    ["Dropper2"] = {
+        ["Name"] = "Dropper2",
+        ["Value"] = 100
+    },
+    ["Dropper3"] = {
+        ["Name"] = "Dropper3",
+        ["Value"] = 250
     }
 }
 

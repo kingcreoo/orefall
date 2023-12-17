@@ -41,6 +41,27 @@ function Tower:Add(Player) -- Create player's tower and assign location.
     self.Model:SetPrimaryPartCFrame(_Settings.Locations[SelectedLocation]["CFrame"])
 end
 
+function Tower:Load(PlayerData: table)
+    for DropperName, Owned in pairs(PlayerData["Droppers"]) do
+        if Owned == 1 then
+            local Dropper = self.Model:WaitForChild("Droppers"):WaitForChild(DropperName) -- Make all owned droppers visible
+            for _, Part: Part in pairs(Dropper:WaitForChild("Build"):GetChildren()) do
+                Part.Transparency = Part:GetAttribute("Transparency")
+                Part.Color = Part:GetAttribute("Color")
+            end
+
+            local Button = self.Model:WaitForChild("Buttons"):WaitForChild(DropperName) -- And then clear all buttons of owned droppers.
+            Button:Destroy()
+        end
+    end
+end
+
+function Tower:Listen()
+    for _, Button in pairs(self.Model:WaitForChild("Buttons"):GetChildren()) do
+        Button:WaitForChild("")
+    end
+end
+
 function Tower:Remove() -- Remove player's tower and mark location as vacant.
     self.Model:Destroy()
     _Settings.Locations[self.Location]["Occupied"] = false
