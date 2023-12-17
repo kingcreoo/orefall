@@ -58,7 +58,7 @@ function _UI.BackpackAdd(Ore: string)
 end
 
 function _UI.BackpackClear()
-    for _, Index in pairs(OresIndex) do
+    for _, Index in pairs(OresIndex:GetChildren()) do
         local OreLabel = Index.Value
 
         OreLabel.Visible = false
