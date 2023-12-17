@@ -20,6 +20,7 @@ local _UI = require(script.UI)
 local LocalPlayer: Player = Players.LocalPlayer
 local LocalGui: PlayerGui = LocalPlayer.PlayerGui
 local LoadingScreen: ScreenGui = LocalGui:WaitForChild("Load")
+local HUD: ScreenGui = LocalGui:WaitForChild("HUD")
 
 local Events: Folder = ReplicatedStorage:WaitForChild("Events")
 local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
@@ -68,6 +69,8 @@ local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. 
 
     LastTween.Completed:Connect(function()
         LoadingScreen.Enabled = false
+        HUD.Enabled = true
+        
         task.wait(1)
         LoadingScreen:Destroy()
     end)

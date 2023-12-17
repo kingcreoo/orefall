@@ -12,6 +12,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- / / MODULES
 
 local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
+local _UI = require(script.Parent.UI)
 
 -- / / VARIABLES
 
@@ -181,6 +182,8 @@ function _Pickaxe:Activate()
                 local Success = ValidateFunction:InvokeServer(Target:GetAttribute("ID"))
                 if Success == true then
                     Target:Destroy()
+
+                    _UI.BackpackAdd(Target.Name)
 
                     self.Target = nil
                     self.TargetTick = 0
