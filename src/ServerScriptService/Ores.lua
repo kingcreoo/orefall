@@ -98,7 +98,6 @@ local function Refine(Player: Player, Ore: string, Time: number)
 
     local PlayerData = _Data.Get(Player) -- get player data
     PlayerQueues[Player.Name][Ore] -= 1 -- remove 1 from this ore's queue
-    PlayerData["Backpack"][Ore] -= 1 -- remove 1 ore from player's backpack
     PlayerData["leaderstats"]["Cash"] += _Settings.Ores[Ore]["Reward"] -- add to player's cash
     _Data.Set(Player, PlayerData) -- set data
     Player:WaitForChild("leaderstats"):WaitForChild("Cash").Value += PlayerData["leaderstats"]["Cash"] -- set leaderstats
@@ -186,15 +185,16 @@ end
 function _Ores.Refine(Player: Player)
     local Time = os.time()
     local PlayerData = _Data.Get(Player)
-    local Backpack = PlayerData["Backpack"]
-
-    for Ore, Amount in pairs(Backpack) do
-        PlayerQueues[Player.Name][Ore] += Amount
-    end
 
     RefineEvent:FireClient(Player)
-    for Ore, Amount in pairs(Backpack) do
-        if PlayerFunctions[Player.Name][Ore] or Amount == 0 then continue end
+
+    for Ore, Amount in pairs(PlayerData["Backpack"]) do
+        PlayerQueues[Player.Name][Ore] += Amount
+
+        PlayerData["Backpack"][Ore] = 0
+        _Data.Set(Player, PlayerData)
+
+        if PlayerFunctions[Player.Name][Ore] or PlayerQueues[Player.Name][Ore] == 0 then continue end
 
         coroutine.wrap(Refine)(Player, Ore, Time)
     end
