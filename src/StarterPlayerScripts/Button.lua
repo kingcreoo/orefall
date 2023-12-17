@@ -51,6 +51,8 @@ function _Button.new(Button: Model)
     self:Load()
 
     Cash.Changed:Connect(function()
+        if not self then return end
+
         self:Load()
     end)
 
@@ -59,6 +61,8 @@ function _Button.new(Button: Model)
     end)
 
     self.Model.Touch.Prompt.PromptHidden:Connect(function()
+        if not self then return end
+        
         self:CloseInfo()
     end)
 
