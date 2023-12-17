@@ -42,7 +42,7 @@ local Red = Color3.fromRGB(255, 73, 73)
 -- / / BACKPACK
 
 function _UI.BackpackAdd(Ore: string)
-    local OreLabel: TextLabel = OresIndex:WaitForChild(Ore)
+    local OreLabel: TextLabel = OresIndex:WaitForChild(Ore).Value
 
     if OreLabel.Visible == false then
         OreLabel.Visible = true
@@ -53,7 +53,7 @@ function _UI.BackpackAdd(Ore: string)
         local Name = String[1]
         local Amount = String[2]
 
-        OreLabel.Text = Name .. tostring(tonumber(Amount) + 1)
+        OreLabel.Text = Name .. ": " .. tostring(tonumber(Amount) + 1)
     end
 end
 
