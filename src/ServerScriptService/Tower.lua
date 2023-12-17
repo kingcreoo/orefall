@@ -81,7 +81,7 @@ function Tower:Listen(Player)
 
                     Button:Destroy()
                 else -- Player has stepped on button but does not have the cash to purchase dropper
-                    warn(Player.Name " does not have enough cash to buy this dropper. Prompt them with $$$")
+                    warn(Player.Name .. " does not have enough cash to buy this dropper. Prompt them with $$$")
 
                     task.wait(1)
                     debounce = false
