@@ -13,6 +13,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 local _Data = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Data"))
+local _Ores = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Ores"))
 
 -- / / FUNCTIONS
 
@@ -89,6 +90,30 @@ function Tower:Listen(Player)
             end
         end)
     end
+
+    local Refinery = self.Model:WaitForChild("Refinery")
+    local Refine, Instant = Refinery:WaitForChild("Refine"), Refinery:WaitForChild("Instant")
+    local debounce = false
+
+    Refine:WaitForChild("Touch").Touched:Connect(function(touched)
+        if touched.Parent.Name == Player.Name and touched.Parent:FindFirstChild("Humanoid") and not debounce then
+            debounce = true
+            _Ores.Refine(Player)
+
+            task.wait(2)
+            debounce = false
+        end
+    end)
+
+    Instant:WaitForChild("Touch").Touched:Connect(function(touched)
+        if touched.Parent.Name == Player.Name and touched.Parent:FindFirstChild("Humanoid") and not debounce then
+            debounce = true
+            _Ores.InstantSell(Player)
+
+            task.wait(2)
+            debounce = false
+        end
+    end)
 end
 
 function Tower:Remove() -- Remove player's tower and mark location as vacant.

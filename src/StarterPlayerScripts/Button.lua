@@ -73,6 +73,19 @@ function _Button.new(Button: Model)
     return self
 end
 
+function _Button._new(Button: Model)
+    local self = setmetatable({}, _Button)
+    self.Model = Button
+    
+    self.Model.Touch.Prompt.PromptShown:Connect(function()
+        self:ShowInfo()
+    end)
+
+    self.Model.Touch.Prompt.PromptHidden:Connect(function()
+        self:CloseInfo()
+    end)
+end
+
 function _Button:Load()
     if not self or not self.Model then return end
 
