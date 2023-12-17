@@ -39,7 +39,9 @@ Settings.Ores = {
         ["Rarity"] = 1, -- Once every (rarity) this ore will be dropped
         ["Strength"] = 1, -- What level pickaxe is required to mine this ore
         ["Health"] = 1, -- How long it will take to mine this ore (1 health Ore + 1 speed Pickaxe = 1 second break time)
-        ["Reward"] = 3 -- Reward in coins
+        ["Reward"] = 3, -- Reward in coins
+        ["RewardInstant"] = 1, -- Reward in coins for instant sell
+        ["RefineTime"] = 1 -- Refine time in seconds
     },
     ["Iron"] = {
         ["Name"] = "Iron",
@@ -48,7 +50,9 @@ Settings.Ores = {
         ["Rarity"] = 3,
         ["Strength"] = 2,
         ["Health"] = 1.5,
-        ["Reward"] = 8
+        ["Reward"] = 8,
+        ["RewardInstant"] = 3,
+        ["RefineTime"] = 2
     }
 }
 

@@ -49,6 +49,9 @@ local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. 
         local CreateButton = _Button.new(Button)
     end
 
+    local Refinery = workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Refinery")
+    local R1, R2 = _Button._new(Refinery:WaitForChild("Refine")), _Button._new(Refinery:WaitForChild("Instant"))
+
     task.wait(2) -- For now. To make the player feel as if their is an actual load time.
     -- When the game has actual stuff to load, we will remove this.
 
@@ -70,7 +73,7 @@ local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. 
     LastTween.Completed:Connect(function()
         LoadingScreen.Enabled = false
         HUD.Enabled = true
-        
+
         task.wait(1)
         LoadingScreen:Destroy()
     end)

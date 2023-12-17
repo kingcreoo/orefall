@@ -16,6 +16,9 @@ local _Data = require(ServerScriptService:WaitForChild("Server"):WaitForChild("D
 
 -- / / VARIABLES
 
+local PlayerQueues = {}
+local PlayerFunctions = {}
+
 local PlayerTimes = {}
 
 local ServerStartTime = workspace:GetServerTimeNow()
@@ -28,6 +31,8 @@ local Functions = ReplicatedStorage:WaitForChild("Functions")
 
 local ActivateFunction: RemoteFunction = Functions:WaitForChild("Activate")
 local ValidateFunction: RemoteFunction = Functions:WaitForChild("Validate")
+
+local RefineEvent: RemoteEvent = Events:WaitForChild("Refine")
 
 -- / / LOCAL FUNCTIONS
 
@@ -79,6 +84,29 @@ local function GenerateOreID()
     end
 
     return ID
+end
+
+local function Refine(Player: Player, Ore: string, Time: number)
+    PlayerFunctions[Player.Name][Ore] = Time
+    local RefineTime = _Settings.Ores[Ore]["RefineTime"]
+
+    repeat
+
+    task.wait(RefineTime) -- Add in boosts here when we get to that
+
+    if not PlayerFunctions[Player.Name][Ore] or PlayerFunctions[Player.Name][Ore] ~= Time then return end
+
+    local PlayerData = _Data.Get(Player) -- get player data
+    PlayerQueues[Player.Name][Ore] -= 1 -- remove 1 from this ore's queue
+    PlayerData["leaderstats"]["Cash"] += _Settings.Ores[Ore]["Reward"] -- add to player's cash
+    _Data.Set(Player, PlayerData) -- set data
+    Player:WaitForChild("Cash").Value += PlayerData["leaderstats"]["Cash"] -- set leaderstats
+
+    until PlayerQueues[Player.Name][Ore] == 0
+
+    PlayerFunctions[Player.Name][Ore] = nil
+
+    return
 end
 
 -- / / FUNCTIONS
@@ -154,6 +182,37 @@ function _Ores.Validate(Player: Player, OreID: string) -- Validate that the play
     return true
 end
 
+function _Ores.Refine(Player: Player)
+    local Time = os.time()
+    local PlayerData = _Data.Get(Player)
+    local Backpack = PlayerData["Backpack"]
+
+    for Ore, Amount in pairs(Backpack) do
+        PlayerQueues[Ore] += Amount
+    end
+
+    RefineEvent:FireClient(Player)
+    for Ore, _ in pairs(Backpack) do
+        if PlayerFunctions[Player.Name][Ore] then return end
+
+        coroutine.wrap(Refine)(Player, Ore, Time)
+    end
+end
+
+function _Ores.InstantSell(Player: Player)
+    local PlayerData: table = _Data.Get(Player)
+
+    for Ore: string, Amount: number in pairs(PlayerData["Backpack"]) do
+        if Amount == 0 then continue end
+
+        PlayerData["leaderstats"]["Cash"] += (_Settings.Ores[Ore]["RewardInstant"] * Amount)
+        PlayerData["Backpack"][Ore] = 0
+    end
+
+    _Data.Set(Player, PlayerData)
+    RefineEvent:FireClient(Player)
+end
+
 -- / / EVENTS
 
 ActivateFunction.OnServerInvoke = function(Player: Player)
@@ -163,5 +222,14 @@ ActivateFunction.OnServerInvoke = function(Player: Player)
 end
 
 ValidateFunction.OnServerInvoke = _Ores.Validate
+
+Players.PlayerAdded:Connect(function(Player)
+    PlayerQueues[Player.Name] = {}
+    PlayerFunctions[Player.Name] = {}
+
+    for _, Ore in pairs(_Settings.OreOrder) do
+        PlayerQueues[Player.Name][Ore] = 0
+    end
+end)
 
 return _Ores

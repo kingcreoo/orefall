@@ -107,5 +107,11 @@ for _, Pickaxe: TextButton in pairs(PickaxesFrame:WaitForChild("Pickaxes"):GetCh
     end)
 end
 
+-- / / REMOTES
+
+RefineEvent.OnClientEvent:Connect(function()
+    _UI.BackpackClear()
+end)
+
 -- / / RETURN
 return _UI
