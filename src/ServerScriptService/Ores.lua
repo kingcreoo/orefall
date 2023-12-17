@@ -100,7 +100,6 @@ local function Refine(Player: Player, Ore: string, Time: number)
     PlayerQueues[Player.Name][Ore] -= 1 -- remove 1 from this ore's queue
     PlayerData["leaderstats"]["Cash"] += _Settings.Ores[Ore]["Reward"] -- add to player's cash
     _Data.Set(Player, PlayerData) -- set data
-    Player:WaitForChild("leaderstats"):WaitForChild("Cash").Value = PlayerData["leaderstats"]["Cash"] -- set leaderstats
 
     until PlayerQueues[Player.Name][Ore] <= 0
 
@@ -119,11 +118,12 @@ function _Ores.DropForPlayer(Player)
             local PlayerData = _Data.Get(Player)
 
             task.wait(4) -- In the future, find this time based off of player's boosts & server boosts
-            local Luck = 1 -- In the future, find this luck based off dropper's luck, player's luck, & boosts
             local DropTable = {}
 
             for _, Dropper in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Droppers"):GetChildren()) do
                 if PlayerData["Droppers"][Dropper.Name] ~= 1 then continue end
+
+                local Luck = _Settings.Droppers[Dropper.Name]["Luck"] -- In the future, find this luck based off dropper's luck, player's luck, & boosts
 
                 local SelectedOre = SelectOre(Luck) -- Choose an ore
 

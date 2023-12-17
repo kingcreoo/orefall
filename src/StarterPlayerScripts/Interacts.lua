@@ -22,6 +22,8 @@ local Red = Color3.fromRGB(255, 73, 73)
 
 local Info = TweenInfo.new(.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
 
+local PurchaseAutominerFunction: RemoteFunction = ReplicatedStorage:WaitForChild("Functions"):WaitForChild("PurchaseAutominer")
+
 -- / / LOCAL FUNCTIONS
 
 -- / / FUNCTIONS
@@ -33,6 +35,39 @@ function _Interacts.Setup(PlayerData: table)
     local InteractsGui = PlayerGui:WaitForChild("Interacts")
 
     local PickaxesFrame = InteractsGui:WaitForChild("Pickaxes")
+    local AutominersFrame = InteractsGui:WaitForChild("Autominers")
+
+    for _, Autominer in pairs(AutominersFrame:WaitForChild("Autominers"):GetChildren()) do
+        local Button: TextButton = Autominer:WaitForChild("Purchase")
+        if PlayerData["Autominers"][Autominer.Name] == 1 then
+            Button:SetAttribute("State", 1)
+            Button.Text = "OWNED"
+        elseif PlayerData["Autominers"][Autominer.Name] == 0 then
+            Button:SetAttribute("State", 0)
+            Button.Text = "PURCHASE"
+        end
+
+        local debounce = false
+
+        Button.MouseButton1Down:Connect(function()
+            if Button:GetAttribute("State") == 1 or debounce then return end
+
+            debounce = true
+            local SUCCESS = PurchaseAutominerFunction:InvokeServer(Button.Name)
+
+            if SUCCESS == true then
+                Button:SetAttribute("State", 1)
+                Button.Text = "OWNED"
+            elseif SUCCESS == "cash" then
+                warn("Player does not have enough cash to purchase this item")
+            elseif SUCCESS == "rebirths" then
+                warn("Player does not have enough rebirths to purchase this item")
+            end
+
+            task.wait(1)
+            debounce = false
+        end)
+    end
 
     for _, Pickaxe in pairs(PickaxesFrame:WaitForChild("Pickaxes"):GetChildren()) do
         if PlayerData["Pickaxes"][Pickaxe.Name] == 1 then

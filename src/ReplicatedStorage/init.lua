@@ -3,7 +3,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Settings = {}
 
-Settings.Version = "0.5.1"
+Settings.Version = "0.4"
 
 Settings.Locations = {
     [1] = {["CFrame"] = CFrame.new(40,0,0), ["Occupied"] = false},
@@ -18,6 +18,11 @@ Settings.DefaultData = { -- In the future we will have to write a system that cr
     ["Pickaxes"] = {
         ["Level1"] = 1,
         ["Level2"] = 0
+    },
+    ["Autominers"] = {
+        ["Autominer1"] = 0,
+        ["Autominer2"] = 0,
+        ["Autominer3"] = 0
     },
     ["Droppers"] = {
         ["Dropper1"] = 0,
@@ -35,7 +40,6 @@ Settings.Ores = {
     ["Coal"] = {
         ["Name"] = "Coal",
         ["Model"] = ReplicatedStorage:WaitForChild("Ores"):WaitForChild("Coal"),
-        ["Value"] = 1, -- How many coins will be rewarded
         ["Rarity"] = 1, -- Once every (rarity) this ore will be dropped
         ["Strength"] = 1, -- What level pickaxe is required to mine this ore
         ["Health"] = 1, -- How long it will take to mine this ore (1 health Ore + 1 speed Pickaxe = 1 second break time)
@@ -46,14 +50,53 @@ Settings.Ores = {
     ["Iron"] = {
         ["Name"] = "Iron",
         ["Model"] = ReplicatedStorage:WaitForChild("Ores"):WaitForChild("Iron"),
-        ["Value"] = 3,
         ["Rarity"] = 3,
-        ["Strength"] = 2,
+        ["Strength"] = 1,
         ["Health"] = 1.5,
         ["Reward"] = 8,
         ["RewardInstant"] = 3,
         ["RefineTime"] = 2
-    }
+    },
+    ["Gold"] = {
+        ["Name"] = "Gold",
+        ["Model"] = ReplicatedStorage:WaitForChild("Ores"):WaitForChild("Gold"),
+        ["Rarity"] = 8,
+        ["Strength"] = 1,
+        ["Health"] = 3,
+        ["Reward"] = 15,
+        ["RewardInstant"] = 8,
+        ["RefineTime"] = 3
+    },
+    ["Diamond"] = {
+        ["Name"] = "Diamond",
+        ["Model"] = ReplicatedStorage:WaitForChild("Ores"):WaitForChild("Diamond"),
+        ["Rarity"] = 21,
+        ["Strength"] = 2,
+        ["Health"] = 5,
+        ["Reward"] = 28,
+        ["RewardInstant"] = 16,
+        ["RefineTime"] = 6
+    },
+    ["Emerald"] = {
+        ["Name"] = "Gold",
+        ["Model"] = ReplicatedStorage:WaitForChild("Ores"):WaitForChild("Gold"),
+        ["Rarity"] = 64,
+        ["Strength"] = 2,
+        ["Health"] = 8,
+        ["Reward"] = 72,
+        ["RewardInstant"] = 32,
+        ["RefineTime"] = 8
+    },
+    ["Ruby"] = {
+        ["Name"] = "Gold",
+        ["Model"] = ReplicatedStorage:WaitForChild("Ores"):WaitForChild("Gold"),
+        ["Rarity"] = 128,
+        ["Strength"] = 2,
+        ["Health"] = 12,
+        ["Reward"] = 112,
+        ["RewardInstant"] = 64,
+        ["RefineTime"] = 12
+    },
 }
 
 Settings.OreOrder = {"Iron", "Coal"} -- This order must be in most rare to least rare. This is because of how my random selections are done.
@@ -89,7 +132,22 @@ Settings.Droppers = {
     ["Dropper3"] = {
         ["Name"] = "Dropper3",
         ["Value"] = 250,
-        ["Luck"] = 1
+        ["Luck"] = 2
+    }
+}
+
+Settings.Autominers = {
+    ["Autominer1"] = {
+        ["Name"] = "Autominer1",
+        ["Value"] = 100
+    },
+    ["Autominer2"] = {
+        ["Name"] = "Autominer2",
+        ["Value"] = 200
+    },
+    ["Autominer3"] = {
+        ["Name"] = "Autominer3",
+        ["Value"] = 300
     }
 }
 
