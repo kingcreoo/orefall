@@ -75,7 +75,7 @@ PurchaseAutominerBindable.Event:Connect(function(Autominer: string)
     local TargetButton: TextButton = AutominersFrame:WaitForChild(Autominer):WaitForChild("Target")
 
     TargetButton:SetAttribute("State", 1)
-    TargetButton.TextColor3 = Green
+    TargetButton.BackgroundColor3 = Green
     TargetButton.Text = "OFF"
 end)
 
@@ -156,13 +156,13 @@ end)
 LoadBindable.Event:Connect(function(PlayerData: table)
     for _, Autominer in pairs(AutominersFrame:GetChildren()) do
         local TargetButton: TextButton = Autominer:WaitForChild("Target")
-        if PlayerData["Autominers"][Autominer] == 1 then
+        if PlayerData["Autominers"][Autominer.Name] == 1 then
             TargetButton:SetAttribute("State", 1)
-            TargetButton.Text = "OFF"
+            TargetButton.Text = "Off"
             TargetButton.BackgroundColor3 = Green
-        elseif PlayerData["Autominers"][Autominer] == 0 then
+        elseif PlayerData["Autominers"][Autominer.Name] == 0 then
             TargetButton:SetAttribute("State", 0)
-            TargetButton.Text = "OFF"
+            TargetButton.Text = "Off"
             TargetButton.BackgroundColor3 = Red
         end
     end
