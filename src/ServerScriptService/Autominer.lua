@@ -21,7 +21,6 @@ local Modes = {"Off", "Best", "Worst", "Closest", "Random"}
 local AltModes = {["Off"] = 1, ["Best"] = 2, ["Worst"] = 3, ["Closest"] = 4, ["Random"] = 5}
 
 local Bindables: Folder = ReplicatedStorage:WaitForChild("Bindables")
-local SetAutominerBindable: BindableFunction = Bindables:WaitForChild("SetAutominer")
 
 -- / / LOCAL FUNCTIONS
 
@@ -44,7 +43,7 @@ function _Autominer.new(Player: Player, Autominer: string)
 end
 
 function _Autominer:ShiftModes()
-    if AltModes[self.Mode] == Modes[#Modes] then
+    if self.Mode == Modes[#Modes] then
         self.Mode = Modes[1]
         return self.Mode
     else
