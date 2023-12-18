@@ -51,7 +51,7 @@ local Red = Color3.fromRGB(255, 73, 73)
 AutominerButton.MouseButton1Down:Connect(function()
     if AutominersFrame.Visible == true then
         AutominersFrame.Visible = false
-    elseif AutominersFrame == false then
+    elseif AutominersFrame.Visible == false then
         AutominersFrame.Visible = true
     end
 end)

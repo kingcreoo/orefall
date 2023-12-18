@@ -53,7 +53,7 @@ function _Interacts.Setup(PlayerData: table)
             if Button:GetAttribute("State") == 1 or debounce then return end
 
             debounce = true
-            local SUCCESS = PurchaseAutominerFunction:InvokeServer(Button.Name)
+            local SUCCESS = PurchaseAutominerFunction:InvokeServer(Button.Parent.Name)
 
             if SUCCESS == true then
                 Button:SetAttribute("State", 1)
