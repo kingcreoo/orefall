@@ -77,11 +77,11 @@ function _Button._new(Button: Model)
     local self = setmetatable({}, _Button)
     self.Model = Button
     
-    self.Model.Touch.Prompt.PromptShown:Connect(function()
+    self.Model:WaitForChild("Touch"):WaitForChild("Prompt").PromptShown:Connect(function()
         self:ShowInfo()
     end)
 
-    self.Model.Touch.Prompt.PromptHidden:Connect(function()
+    self.Model:WaitForChild("Touch"):WaitForChild("Prompt").PromptHidden:Connect(function()
         self:CloseInfo()
     end)
 end
@@ -90,11 +90,11 @@ function _Button:Load()
     if not self or not self.Model then return end
 
     if Cash.Value >= self.Settings["Value"] then
-        self.Model.Color.Color = Green
-        self.Model.Touch.BillboardGui.Cash.TextColor3 = Green
+        self.Model:WaitForChild("Color").Color = Green
+        self.Model:WaitForChild("Touch"):WaitForChild("BillboardGui"):WaitForChild("Cash").TextColor3 = Green
     else
-        self.Model.Color.Color = Red
-        self.Model.Touch.BillboardGui.Cash.TextColor3 = Red
+        self.Model:WaitForChild("Color").Color = Red
+        self.Model:WaitForChild("Touch"):WaitForChild("BillboardGui"):WaitForChild("Cash").TextColor3 = Red
     end
 end
 

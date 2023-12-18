@@ -21,7 +21,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 local InteractsGui = PlayerGui:WaitForChild("Interacts")
 local HUDGui = PlayerGui:WaitForChild("HUD")
 
-local AutominersFrame = HUDGui:WaitForChild("Autominers")
+local AutominersFrame = HUDGui:WaitForChild("AutominersFrame")
 local AutominerButton = HUDGui:WaitForChild("Autominers")
 
 local PickaxesFrame = InteractsGui:WaitForChild("Pickaxes")

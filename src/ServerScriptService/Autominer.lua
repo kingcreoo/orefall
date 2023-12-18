@@ -35,7 +35,7 @@ function _Autominer.new(Player: Player, Autominer: string)
     self.Model = ReplicatedStorage:WaitForChild("Autominers"):WaitForChild("Autominer"):Clone()
 
     self.Model.Parent = workspace
-    self.Model:SetPrimaryPartCFrame(self.Tower:WaitForChild("Docks"):WaitForChild(self.Autominer))
+    self.Model:SetPrimaryPartCFrame(self.Tower:WaitForChild("Docks"):WaitForChild(self.Autominer).CFrame + Vector3.new(0,4,0))
 
     self:Listen()
 
