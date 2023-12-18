@@ -35,7 +35,10 @@ function _Autominer.new(Player: Player, Autominer: string)
     self.Mode = "Off"
     self.Model = Autominer
 
-    self:Listen()
+    local SetBindable: BindableFunction = self.Model:WaitForChild("Set")
+    SetBindable.OnInvoke = function()
+        return self:ShiftModes()
+    end
 
     return self
 end
@@ -47,15 +50,6 @@ function _Autominer:ShiftModes()
     else
         self.Mode = Modes[AltModes[self.Mode] + 1]
         return self.Mode
-    end
-end
-
-function _Autominer:Listen()
-    SetAutominerBindable.OnInvoke = function(Player: Player, Autominer: string)
-        if self.Player == Player.Name and self.Autominer == Autominer then
-            local Result = self:ShiftModes()
-            return Result
-        end
     end
 end
 

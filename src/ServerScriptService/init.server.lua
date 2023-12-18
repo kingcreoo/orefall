@@ -32,7 +32,6 @@ local PurchaseAutominerFunction: RemoteFunction = Functions:WaitForChild("Purcha
 local SetAutominerFunction: RemoteFunction = Functions:WaitForChild("SetAutominer")
 
 local Bindables: Folder = ReplicatedStorage:WaitForChild("Bindables")
-local SetAutominerBindable: BindableFunction = Bindables:WaitForChild("SetAutominer")
 
 -- / / FUNCTIONS
 
@@ -158,9 +157,10 @@ SetAutominerFunction.OnServerInvoke = function(Player: Player, Autominer: string
     local PlayerData = _Data.Get(Player)
     if PlayerData["Autominers"][Autominer] ~= 1 then return 0 end
 
-    local Result = SetAutominerBindable:Invoke(Player, Autominer)
-    print(Result)
+    local Bindable: BindableFunction = workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Autominers"):WaitForChild(Autominer):WaitForChild("Set")
+    local Result = Bindable:Invoke()
 
+    print(Result)
     return Result
 end
 
