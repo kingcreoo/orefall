@@ -23,6 +23,7 @@ local Red = Color3.fromRGB(255, 73, 73)
 local Info = TweenInfo.new(.2, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
 
 local PurchaseAutominerFunction: RemoteFunction = ReplicatedStorage:WaitForChild("Functions"):WaitForChild("PurchaseAutominer")
+local PurchaseAutominerBindable: BindableEvent = ReplicatedStorage:WaitForChild("Bindables"):WaitForChild("PurchaseAutominer")
 
 -- / / LOCAL FUNCTIONS
 
@@ -58,6 +59,8 @@ function _Interacts.Setup(PlayerData: table)
             if SUCCESS == true then
                 Button:SetAttribute("State", 1)
                 Button.Text = "OWNED"
+
+                PurchaseAutominerBindable:Fire(Button.Parent.Name)
             elseif SUCCESS == "cash" then
                 warn("Player does not have enough cash to purchase this item")
             elseif SUCCESS == "rebirths" then

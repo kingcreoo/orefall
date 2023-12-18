@@ -42,6 +42,7 @@ local PurchaseFunction: RemoteFunction = Functions:WaitForChild("Purchase")
 local SetAutominerFunction: RemoteFunction = Functions:WaitForChild("SetAutominer")
 
 local LoadBindable: BindableEvent = Bindables:WaitForChild("Load")
+local PurchaseAutominerBindable: BindableEvent = Bindables:WaitForChild("PurchaseAutominer")
 
 local Green = Color3.fromRGB(85, 170, 0)
 local Red = Color3.fromRGB(255, 73, 73)
@@ -69,6 +70,14 @@ for _, Autominer in pairs(AutominersFrame:GetChildren()) do
         TargetButton.Text = Result
     end)
 end
+
+PurchaseAutominerBindable.Event:Connect(function(Autominer: string)
+    local TargetButton: TextButton = AutominersFrame:WaitForChild(Autominer):WaitForChild("Target")
+
+    TargetButton:SetAttribute("State", 1)
+    TargetButton.TextColor3 = Green
+    TargetButton.Text = "OFF"
+end)
 
 -- / / BACKPACK
 
@@ -150,9 +159,11 @@ LoadBindable.Event:Connect(function(PlayerData: table)
         if PlayerData["Autominers"][Autominer] == 1 then
             TargetButton:SetAttribute("State", 1)
             TargetButton.Text = "OFF"
+            TargetButton.BackgroundColor3 = Green
         elseif PlayerData["Autominers"][Autominer] == 0 then
             TargetButton:SetAttribute("State", 0)
-            TargetButton.Text = "UNOWNED"
+            TargetButton.Text = "OFF"
+            TargetButton.BackgroundColor3 = Red
         end
     end
 end)
