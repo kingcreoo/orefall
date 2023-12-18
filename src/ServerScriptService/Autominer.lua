@@ -45,7 +45,7 @@ end
 
 function _Autominer:ShiftModes()
     if AltModes[self.Mode] == Modes[#Modes] then
-        self.Mode = Modes[0]
+        self.Mode = Modes[1]
         return self.Mode
     else
         self.Mode = Modes[AltModes[self.Mode] + 1]
