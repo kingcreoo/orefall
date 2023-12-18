@@ -215,8 +215,6 @@ function _Ores.InstantSell(Player: Player)
 end
 
 function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
-    if #OreDataBase[PlayerName] == 0 then return nil end -- if player does not have any ores then we will return nil
-
     if Mode == "Best" then
         local Best
         for _, Selection in pairs(OreDataBase[PlayerName]) do
@@ -256,6 +254,8 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
 
         return Selection
     end
+
+    return nil
 end
 
 -- / / EVENTS

@@ -26,7 +26,7 @@ local Events: Folder = ReplicatedStorage:WaitForChild("Events")
 local Functions: Folder = ReplicatedStorage:WaitForChild("Functions")
 
 local MoveAutominerEvent: RemoteEvent = Events:WaitForChild("MoveAutominer")
-local AskForCFrameFunction: RemoteFunction = Functions:WaitForChild("AskForCFrame")
+local GetOreInfoFunction: RemoteFunction = Functions:WaitForChild("GetOreInfo")
 
 -- / / LOCAL FUNCTIONS
 
@@ -40,7 +40,7 @@ function _Autominer.new(Player: Player, Autominer: string)
     self.Mode = "Off"
     self.Model = Autominer
     self.DockPosition = self.Model.PrimaryPart.Position
-    self.DockCFrame = self.Model.Primarypart.CFrame
+    self.DockCFrame = self.Model.PrimaryPart.CFrame
 
     local SetBindable: BindableFunction = self.Model:WaitForChild("Set")
     SetBindable.OnInvoke = function()
@@ -79,13 +79,18 @@ function _Autominer:Off()
 end
 
 function _Autominer:Mine(Mode: string)
-    local Target = _Ores:GetAutominerTarget(Mode)
+    local Target = _Ores.GetAutominerTarget(Mode)
     if not Target then
         task.wait(1)
         return
     end
 
-    local TargetCFrame, TargetPosition = AskForCFrameFunction:InvokeClient(Players:WaitForChild(self.Player), Target)
+    local TargetCFrame, TargetPosition, Velocity = GetOreInfoFunction:InvokeClient(Players:WaitForChild(self.Player), Target)
+    if Velocity > 0.05 then
+        task.wait(1)
+        return
+    end
+
     local Time = (self.Model.PrimaryPart.Position - TargetPosition).Magnitude / 2
 
     MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetCFrame, Time)
