@@ -26,9 +26,13 @@ local Events: Folder = ReplicatedStorage:WaitForChild("Events")
 local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
 local DropEvent: RemoteEvent = Events:WaitForChild("Drop")
 local EquipEvent: RemoteEvent = Events:WaitForChild("Equip")
+local MoveAutominerEvent: RemoteEvent = Events:WaitForChild("MoveAutominer")
 
 local Bindables: Folder = ReplicatedStorage:WaitForChild("Bindables")
 local LoadBindable: BindableEvent = Bindables:WaitForChild("Load")
+
+local Functions: Folder = ReplicatedStorage:WaitForChild("Functions")
+local GetOreInfoFunction: RemoteFunction = Functions:WaitForChild("GetOreInfo")
 
 local LoadingScreenInfo = TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
 
@@ -95,6 +99,18 @@ local function CreateOre(DropperName, OreTable)
     Ore.Parent = workspace:WaitForChild("ActiveOres")
 end
 
+local function FindOre(OreInfo: table)
+    local Ore
+
+    for _, _Ore in pairs(workspace:WaitForChild("ActiveOres"):GetChildren()) do
+        if _Ore:GetAttribute("ID") == OreInfo["ID"] then
+            Ore = _Ore
+        end
+    end
+
+    return Ore
+end
+
 -- / / REMOTES
 
 LoadEvent.OnClientEvent:Connect(PlayerLoaded)
@@ -104,5 +120,14 @@ DropEvent.OnClientEvent:Connect(function(DropTable)
     end
 end)
 EquipEvent.OnClientEvent:Connect(EquipPickaxe)
+
+GetOreInfoFunction.OnClientInvoke = function(OreInfo: table)
+    local Ore: Part = FindOre(OreInfo)
+    return Ore.Position, Ore.CFrame, Ore.AssemblyLinearVelocity
+end
+
+MoveAutominerEvent.OnClientEvent:Connect(function()
+    print('move')
+end)
 
 -- / / EVENTS
