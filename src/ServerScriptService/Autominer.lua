@@ -32,7 +32,7 @@ function _Autominer.new(Player: Player, Autominer: string)
     self.Player = Player.Name
     self.Tower = workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name)
     self.Autominer = Autominer
-    self.Mode = 0
+    self.Mode = "Off"
     self.Model = ReplicatedStorage:WaitForChild("Autominers"):WaitForChild("Autominer"):Clone()
 
     self.Model.Parent = workspace
