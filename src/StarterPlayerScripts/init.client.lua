@@ -27,6 +27,9 @@ local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
 local DropEvent: RemoteEvent = Events:WaitForChild("Drop")
 local EquipEvent: RemoteEvent = Events:WaitForChild("Equip")
 
+local Bindables: Folder = ReplicatedStorage:WaitForChild("Bindables")
+local LoadBindable: BindableEvent = Bindables:WaitForChild("Load")
+
 local LoadingScreenInfo = TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
 
 local EquippedPickaxe
@@ -51,6 +54,8 @@ local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. 
 
     local Refinery = workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Refinery")
     local R1, R2 = _Button._new(Refinery:WaitForChild("Refine")), _Button._new(Refinery:WaitForChild("Instant"))
+
+    LoadBindable:Fire(PlayerData)
 
     task.wait(2) -- For now. To make the player feel as if their is an actual load time.
     -- When the game has actual stuff to load, we will remove this.

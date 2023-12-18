@@ -21,6 +21,9 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 local InteractsGui = PlayerGui:WaitForChild("Interacts")
 local HUDGui = PlayerGui:WaitForChild("HUD")
 
+local AutominersFrame = HUDGui:WaitForChild("Autominers")
+local AutominerButton = HUDGui:WaitForChild("Autominers")
+
 local PickaxesFrame = InteractsGui:WaitForChild("Pickaxes")
 local EquippedPickaxe = PickaxesFrame:WaitForChild("Equipped")
 
@@ -29,15 +32,43 @@ local OresIndex = BackpackFrame:WaitForChild("Index")
 
 local Functions = ReplicatedStorage:WaitForChild("Functions")
 local Events = ReplicatedStorage:WaitForChild("Events")
+local Bindables = ReplicatedStorage:WaitForChild("Bindables")
 
 local RefineEvent: RemoteEvent = Events:WaitForChild("Refine")
 local InstantEvent: RemoteEvent = Events:WaitForChild("Instant")
 
 local EquipFunction: RemoteFunction = Functions:WaitForChild("Equip")
 local PurchaseFunction: RemoteFunction = Functions:WaitForChild("Purchase")
+local SetAutominerFunction: RemoteFunction = Functions:WaitForChild("SetAutominer")
+
+local LoadBindable: BindableEvent = Bindables:WaitForChild("Load")
 
 local Green = Color3.fromRGB(85, 170, 0)
 local Red = Color3.fromRGB(255, 73, 73)
+
+-- / / AUTOMINERS
+
+AutominerButton.MouseButton1Down:Connect(function()
+    if AutominersFrame.Visible == true then
+        AutominersFrame.Visible = false
+    elseif AutominersFrame == false then
+        AutominersFrame.Visible = true
+    end
+end)
+
+for _, Autominer in pairs(AutominersFrame:GetChildren()) do
+    local TargetButton: TextButton = Autominer:WaitForChild("Target")
+    TargetButton.MouseButton1Down:Connect(function()
+        if TargetButton:GetAttribute("State") == 0 then return end
+        local Result = SetAutominerFunction:InvokeServer(Autominer.Name)
+
+        if Result == 0 then
+            warn("Player does not own this autominer!")
+        end
+
+        TargetButton.Text = Result
+    end)
+end
 
 -- / / BACKPACK
 
@@ -111,6 +142,19 @@ end
 
 RefineEvent.OnClientEvent:Connect(function()
     _UI.BackpackClear()
+end)
+
+LoadBindable.Event:Connect(function(PlayerData: table)
+    for _, Autominer in pairs(AutominersFrame:GetChildren()) do
+        local TargetButton: TextButton = Autominer:WaitForChild("Target")
+        if PlayerData["Autominers"][Autominer] == 1 then
+            TargetButton:SetAttribute("State", 1)
+            TargetButton.Text = "OFF"
+        elseif PlayerData["Autominers"][Autominer] == 0 then
+            TargetButton:SetAttribute("State", 0)
+            TargetButton.Text = "UNOWNED"
+        end
+    end
 end)
 
 -- / / RETURN

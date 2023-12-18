@@ -16,6 +16,7 @@ local _Tower = require(ServerScriptService:WaitForChild("Server"):WaitForChild("
 local _Data = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Data"))
 local _Ores = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Ores"))
 local _Pickaxes = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Pickaxes"))
+local _Autominer = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Autominer"))
 
 -- / / VARIABLES
 
@@ -27,6 +28,11 @@ local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
 local Functions: Folder = ReplicatedStorage:WaitForChild("Functions")
 local EquipFunction: RemoteFunction = Functions:WaitForChild("Equip")
 local PurchaseFunction: RemoteFunction = Functions:WaitForChild("Purchase")
+local PurchaseAutominerFunction: RemoteFunction = Functions:WaitForChild("PurchaseAutominer")
+local SetAutominerFunction: RemoteFunction = Functions:WaitForChild("SetAutominer")
+
+local Bindables: Folder = ReplicatedStorage:WaitForChild("Bindables")
+local SetAutominerBindable: BindableFunction = Bindables:WaitForChild("SetAutominer")
 
 -- / / FUNCTIONS
 
@@ -117,6 +123,21 @@ local function RemovePlayer(Player: Player)
     -- Save the player's data here, just in case.
 end
 
+local function PurchaseAutominer(Player: Player, Autominer: string)
+    local PlayerData: table = _Data.Get(Player)
+
+    if PlayerData["leaderstats"]["Cash"] < _Settings.Autominers[Autominer]["Value"] then return "cash" end
+
+    PlayerData["leaderstats"]["Cash"] -= _Settings.Autominers[Autominer]["Value"]
+    PlayerData["Autominers"][Autominer] = 1
+
+    _Data.Set(Player, PlayerData)
+
+    local AM = _Autominer.new(Player, Autominer)
+
+    return true
+end
+
 -- / / REMOTES
 
 EquipFunction.OnServerInvoke = function(Player, PickaxeType)
@@ -127,6 +148,18 @@ end
 PurchaseFunction.OnServerInvoke = function(Player, PickaxeType)
     local result = _Pickaxes.Purchase(Player, PickaxeType)
     return result
+end
+
+PurchaseAutominerFunction.OnServerInvoke = PurchaseAutominer
+
+SetAutominerFunction.OnServerInvoke = function(Player: Player, Autominer: string)
+    local PlayerData = _Data.Get(Player)
+    if PlayerData["Autominers"][Autominer] ~= 1 then return 0 end
+
+    local Result = SetAutominerBindable:Invoke(Player, Autominer)
+    print(Result)
+
+    return Result
 end
 
 -- / / EVENTS
