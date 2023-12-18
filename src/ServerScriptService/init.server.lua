@@ -108,6 +108,10 @@ local function LoadPlayer(Player: Player)
 
     Character:SetPrimaryPartCFrame(PlayerTower.Model:WaitForChild("Teleport").CFrame) -- Teleport the player to the tower's location.
 
+    for _, Autominer in pairs(PlayerTower.Model:WaitForChild("Autominers"):GetChildren()) do
+        _Autominer.new(Player, Autominer)
+    end
+
     LoadEvent:FireClient(Player, PlayerData) -- Communicate to the client that player has been loaded.
 
     task.wait(1)
@@ -132,8 +136,6 @@ local function PurchaseAutominer(Player: Player, Autominer: string)
     PlayerData["Autominers"][Autominer] = 1
 
     _Data.Set(Player, PlayerData)
-
-    local AM = _Autominer.new(Player, Autominer)
 
     return true
 end

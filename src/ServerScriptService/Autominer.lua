@@ -31,12 +31,9 @@ function _Autominer.new(Player: Player, Autominer: string)
     local self = setmetatable({}, _Autominer)
     self.Player = Player.Name
     self.Tower = workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name)
-    self.Autominer = Autominer
+    self.Autominer = Autominer.Name
     self.Mode = "Off"
-    self.Model = ReplicatedStorage:WaitForChild("Autominers"):WaitForChild("Autominer"):Clone()
-
-    self.Model.Parent = workspace
-    self.Model:SetPrimaryPartCFrame(self.Tower:WaitForChild("Docks"):WaitForChild(self.Autominer).CFrame + Vector3.new(0,4,0))
+    self.Model = Autominer
 
     self:Listen()
 
