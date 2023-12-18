@@ -128,7 +128,7 @@ function _Ores.DropForPlayer(Player)
                 local SelectedOre = SelectOre(Luck) -- Choose an ore
 
                 local OreID = GenerateOreID() -- Create an ID for the ore
-                OreDataBase[Player.Name][OreID] = SelectedOre["Name"] -- Update player's oredatabase with new ore
+                OreDataBase[Player.Name][OreID] = {["Type"] = SelectedOre["Name"], ["ID"] = OreID} -- Update player's oredatabase with new ore
 
                 DropTable[Dropper.Name] = {SelectedOre["Name"], OreID} -- Add ore the table that will be returned to the player
             end
@@ -139,7 +139,7 @@ function _Ores.DropForPlayer(Player)
 end
 
 function _Ores.Validate(Player: Player, OreID: string) -- Validate that the player has actually mined this ore through a series of checks
-    local OreType = OreDataBase[Player.Name][OreID]
+    local OreType = OreDataBase[Player.Name][OreID]["Type"]
 
     local TimeOfDestruction = workspace:GetServerTimeNow() - ServerStartTime
     local Valid = true
@@ -212,6 +212,50 @@ function _Ores.InstantSell(Player: Player)
 
     _Data.Set(Player, PlayerData)
     RefineEvent:FireClient(Player)
+end
+
+function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
+    if #OreDataBase[PlayerName] == 0 then return nil end -- if player does not have any ores then we will return nil
+
+    if Mode == "Best" then
+        local Best
+        for _, Selection in pairs(OreDataBase[PlayerName]) do
+            if not Best then
+                Best = Selection
+               continue
+            end
+
+            if _Settings.OreOrderKeys[Selection["Type"]] > _Settings.OreOrderKeys[Best] then
+                Best = Selection
+            end
+        end
+
+        return  Best
+    elseif Mode == "Worst" then
+        local Worst
+        for _, Selection in pairs(OreDataBase[PlayerName]) do
+            if not Worst then
+               Worst = Selection
+               continue
+            end
+
+            if _Settings.OreOrderKeys[Selection["Type"]] < _Settings.OreOrderKeys[Worst] then
+                Worst = Selection
+            end
+        end
+
+        return Worst
+    elseif Mode == "Random" then
+        local KeyArray = {}
+        for Key, _ in pairs(OreDataBase[PlayerName]) do
+            table.insert(KeyArray, Key)
+        end
+
+        local RandomNumber = math.random(1, #KeyArray)
+        local Selection = OreDataBase[PlayerName][KeyArray[RandomNumber]]
+
+        return Selection
+    end
 end
 
 -- / / EVENTS

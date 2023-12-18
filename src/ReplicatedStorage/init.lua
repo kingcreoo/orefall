@@ -99,7 +99,8 @@ Settings.Ores = {
     },
 }
 
-Settings.OreOrder = {"Iron", "Coal"} -- This order must be in most rare to least rare. This is because of how my random selections are done.
+Settings.OreOrder = {"Ruby", "Emerald", "Diamond", "Gold", "Iron", "Coal"} -- This order must be in most rare to least rare. This is because of how my random selections are done.
+Settings.OreOrderKeys = {["Ruby"] = 6, ["Emerald"] = 5, ["Diamond"] = 4, ["Gold"] = 3, ["Iron"] = 2, ["Coal"] = 1}
 
 Settings.Pickaxes = {
     ["Level1"] = {
