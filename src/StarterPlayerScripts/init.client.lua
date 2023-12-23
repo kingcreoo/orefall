@@ -27,6 +27,8 @@ local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
 local DropEvent: RemoteEvent = Events:WaitForChild("Drop")
 local EquipEvent: RemoteEvent = Events:WaitForChild("Equip")
 local MoveAutominerEvent: RemoteEvent = Events:WaitForChild("MoveAutominer")
+local AnimateAutominerEvent: RemoteEvent = Events:WaitForChild("AnimateAutominer")
+local AutominerMineEvent: RemoteEvent = Events:WaitForChild("AutominerMine")
 
 local Bindables: Folder = ReplicatedStorage:WaitForChild("Bindables")
 local LoadBindable: BindableEvent = Bindables:WaitForChild("Load")
@@ -128,6 +130,17 @@ end
 
 MoveAutominerEvent.OnClientEvent:Connect(function()
     print('move')
+end)
+
+AnimateAutominerEvent.OnClientEvent:Connect(function()
+    print('animate')
+end)
+
+AutominerMineEvent.OnClientEvent:Connect(function(OreInfo: table)
+    local Ore: Part = FindOre(OreInfo)
+    _UI.BackpackAdd(OreInfo["Type"])
+
+    Ore:Destroy()
 end)
 
 -- / / EVENTS

@@ -26,6 +26,8 @@ local Events: Folder = ReplicatedStorage:WaitForChild("Events")
 local Functions: Folder = ReplicatedStorage:WaitForChild("Functions")
 
 local MoveAutominerEvent: RemoteEvent = Events:WaitForChild("MoveAutominer")
+local AnimateAutominerEvent: RemoteEvent = Events:WaitForChild("AnimateAutominer")
+local AutominerMineEvent: RemoteEvent = Events:WaitForChild("AutominerMine")
 local GetOreInfoFunction: RemoteFunction = Functions:WaitForChild("GetOreInfo")
 
 -- / / LOCAL FUNCTIONS
@@ -93,12 +95,22 @@ function _Autominer:Mine(Mode: string)
 
     print(Target)
 
-    local Time = (self.Model.PrimaryPart.Position - TargetPosition).Magnitude / 16
+    local TimeToMove = (self.Model.PrimaryPart.Position - TargetPosition).Magnitude / 16
+    MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetCFrame, TimeToMove)
 
-    MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetCFrame, Time)
+    task.wait(TimeToMove)
+    self.Model:MoveTo(TargetPosition)
 
-    task.wait(Time)
-    self.Model:MoveTo(self.TargetPosition)
+    local TimeToMine = _Settings.Ores[Target["Type"]]["Health"] / (_Settings.Pickaxes["Level1"]["Speed"] / 3)
+    AnimateAutominerEvent:FireAllClients(self.Player, self.Autominer, TimeToMine)
+
+    task.wait(TimeToMine)
+
+    local PlayerData = _Data.Get(Players:WaitForChild(self.Player))
+    PlayerData["Backpack"][Target["Type"]] += 1
+    _Data.Set(Players:WaitForChild(self.Player), PlayerData)
+
+    AutominerMineEvent:FireClient(Players:WaitForChild(self.Player), Target)
 
     return
 end

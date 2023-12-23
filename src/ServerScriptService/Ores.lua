@@ -117,7 +117,7 @@ function _Ores.DropForPlayer(Player)
         while Players:FindFirstChild(Player.Name) do
             local PlayerData = _Data.Get(Player)
 
-            task.wait(4) -- In the future, find this time based off of player's boosts & server boosts
+            task.wait(8) -- In the future, find this time based off of player's boosts & server boosts
             local DropTable = {}
 
             for _, Dropper in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Droppers"):GetChildren()) do
@@ -223,7 +223,7 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
                 continue
             end
 
-            if _Settings.OreOrderKeys[Selection["Type"]] > _Settings.OreOrderKeys[Best] then
+            if _Settings.OreOrderKeys[Selection["Type"]] > _Settings.OreOrderKeys[Best["Type"]] then
                 Best = Selection
             end
         end
@@ -237,7 +237,7 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
                continue
             end
 
-            if _Settings.OreOrderKeys[Selection["Type"]] < _Settings.OreOrderKeys[Worst] then
+            if _Settings.OreOrderKeys[Selection["Type"]] < _Settings.OreOrderKeys[Worst["Type"]] then
                 Worst = Selection
             end
         end
