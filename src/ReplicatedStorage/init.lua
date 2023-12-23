@@ -78,7 +78,7 @@ Settings.Ores = {
         ["RefineTime"] = 6
     },
     ["Emerald"] = {
-        ["Name"] = "Gold",
+        ["Name"] = "Emerald",
         ["Model"] = ReplicatedStorage:WaitForChild("Ores"):WaitForChild("Gold"),
         ["Rarity"] = 64,
         ["Strength"] = 2,
@@ -88,7 +88,7 @@ Settings.Ores = {
         ["RefineTime"] = 8
     },
     ["Ruby"] = {
-        ["Name"] = "Gold",
+        ["Name"] = "Ruby",
         ["Model"] = ReplicatedStorage:WaitForChild("Ores"):WaitForChild("Gold"),
         ["Rarity"] = 128,
         ["Strength"] = 2,
