@@ -10,7 +10,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local DataStoreService = game:GetService("DataStoreService")
-local DataStore = DataStoreService:GetDataStore("DataStore")
+local DataStore = DataStoreService:GetDataStore("test")
 
 -- / / MODULES
 

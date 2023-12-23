@@ -32,7 +32,7 @@ local GetOreInfoFunction: RemoteFunction = Functions:WaitForChild("GetOreInfo")
 
 -- / / OBJECT FUNCTIONS
 
-function _Autominer.new(Player: Player, Autominer: string)
+function _Autominer.new(Player: Player, Autominer)
     local self = setmetatable({}, _Autominer)
     self.Player = Player.Name
     self.Tower = workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name)
@@ -48,7 +48,7 @@ function _Autominer.new(Player: Player, Autominer: string)
     end
 
     coroutine.wrap(function()
-        while Players:FindFirstChild(Player.Name) do
+        while Players:FindFirstChild(Player.Name) and _Data.Get(Player)["Autominers"][self.Autominer] == 1 do
             local Mode = self.Mode
 
             if Mode == "Off" then
@@ -69,7 +69,7 @@ function _Autominer:Off()
         return
     end
 
-    local Time = (self.Model.PrimaryPart.Position - self.DockPosition).Magnitude / 2
+    local Time = (self.Model.PrimaryPart.Position - self.DockPosition).Magnitude / 16
     MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, self.DockCFrame, Time)
 
     task.wait(Time)
@@ -79,19 +79,21 @@ function _Autominer:Off()
 end
 
 function _Autominer:Mine(Mode: string)
-    local Target = _Ores.GetAutominerTarget(Mode)
+    local Target = _Ores.GetAutominerTarget(self.Player, Mode)
     if not Target then
         task.wait(1)
         return
     end
 
-    local TargetCFrame, TargetPosition, Velocity = GetOreInfoFunction:InvokeClient(Players:WaitForChild(self.Player), Target)
-    if Velocity > 0.05 then
+    local TargetPosition, TargetCFrame, Velocity = GetOreInfoFunction:InvokeClient(Players:WaitForChild(self.Player), Target)
+    if Velocity.X > 0.05 or Velocity.Y > 0.05 or Velocity.Z > 0.05 then
         task.wait(1)
         return
     end
 
-    local Time = (self.Model.PrimaryPart.Position - TargetPosition).Magnitude / 2
+    print(Target)
+
+    local Time = (self.Model.PrimaryPart.Position - TargetPosition).Magnitude / 16
 
     MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetCFrame, Time)
 

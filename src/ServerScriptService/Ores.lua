@@ -220,7 +220,7 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
         for _, Selection in pairs(OreDataBase[PlayerName]) do
             if not Best then
                 Best = Selection
-               continue
+                continue
             end
 
             if _Settings.OreOrderKeys[Selection["Type"]] > _Settings.OreOrderKeys[Best] then
@@ -228,7 +228,7 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
             end
         end
 
-        return  Best
+        return Best
     elseif Mode == "Worst" then
         local Worst
         for _, Selection in pairs(OreDataBase[PlayerName]) do

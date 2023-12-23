@@ -7,7 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local DataStoreService = game:GetService("DataStoreService")
-local DataStore = DataStoreService:GetDataStore("DataStore")
+local DataStore = DataStoreService:GetDataStore("test")
 
 -- / / MODULES
 
@@ -160,7 +160,6 @@ SetAutominerFunction.OnServerInvoke = function(Player: Player, Autominer: string
     local Bindable: BindableFunction = workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Autominers"):WaitForChild(Autominer):WaitForChild("Set")
     local Result = Bindable:Invoke()
 
-    print(Result)
     return Result
 end
 
