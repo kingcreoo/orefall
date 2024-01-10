@@ -87,14 +87,14 @@ function _Autominer:Mine(Mode: string)
         return
     end
 
-    local TargetPosition, TargetCFrame, Set = GetOreInfoFunction:InvokeClient(Players:WaitForChild(self.Player), Target)
-    if Set == false then
+    local TargetPosition, TargetCFrame, Set, Targeted = GetOreInfoFunction:InvokeClient(Players:WaitForChild(self.Player), Target)
+    if Set == false or Targeted > 0 then
         task.wait(1)
         return
     end
 
     local TimeToMove = (self.Model.PrimaryPart.Position - TargetPosition).Magnitude / 16
-    MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetCFrame, TimeToMove)
+    MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetCFrame, TimeToMove, Target)
 
     task.wait(TimeToMove)
     self.Model:MoveTo(TargetPosition)

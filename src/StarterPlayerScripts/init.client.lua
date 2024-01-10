@@ -94,6 +94,7 @@ local function CreateOre(DropperName, OreTable) -- Spawn an ore with given table
     local Ore: Instance = ReplicatedStorage:WaitForChild("Ores"):WaitForChild(OreTable[1]):Clone()
     Ore:SetAttribute("ID", OreTable[2])
     Ore:SetAttribute("Set", false)
+    Ore:SetAttribute("Targeted", 0)
     Ore:SetAttribute("TotalHealth", _Settings.Ores[OreTable[1]]["Health"])
     Ore:SetAttribute("Health", _Settings.Ores[OreTable[1]]["Health"])
     Ore:SetAttribute("Strength", _Settings.Ores[OreTable[1]]["Strength"])
@@ -137,10 +138,15 @@ EquipEvent.OnClientEvent:Connect(EquipPickaxe)
 
 GetOreInfoFunction.OnClientInvoke = function(OreInfo: table) -- Server inquires about info on this ore
     local Ore: Part = FindOre(OreInfo)
-    return Ore.Position, Ore.CFrame, Ore:GetAttribute("Set") -- So we return the ores position in the workspace as well as if it's set in place or not.
+    return Ore.Position, Ore.CFrame, Ore:GetAttribute("Set"), Ore:GetAttribute("Targeted") -- So we return the ores position in the workspace as well as if it's set in place or not.
 end
 
-MoveAutominerEvent.OnClientEvent:Connect(function(PlayerName: string, Autominer: string, TargetCFrame: CFrame, Time: number)
+MoveAutominerEvent.OnClientEvent:Connect(function(PlayerName: string, Autominer: string, TargetCFrame: CFrame, Time: number, Target: table)
+    if PlayerName == LocalPlayer.Name then
+        local Ore: Part = FindOre(Target)
+        Ore:SetAttribute("Targeted", 2)
+        Ore.BrickColor = BrickColor.new("Really red")
+    end
     print('move', Time)
 end)
 

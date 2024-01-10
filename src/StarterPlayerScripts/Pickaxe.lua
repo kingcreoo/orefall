@@ -165,6 +165,13 @@ function _Pickaxe:Activate()
             return
         end
 
+        if MouseTarget:GetAttribute("Targeted") > 1 then
+            warn("Ore is being mined by an autominer!")
+            self.Tool:Deactivate()
+            LocalPlayer.Character.Humanoid:UnequipTools()
+            return
+        end
+
         self.Target = MouseTarget
         self.TargetTick += 1
     end)
@@ -191,6 +198,9 @@ function _Pickaxe:Activate()
                     --Drop gui here
                 end
             else
+                if Target:GetAttribute("Targeted") == false then
+                    Target:SetAttribute("Targeted", 1)
+                end
                 Target:SetAttribute("Health", Health - Damage)
             end
         end
