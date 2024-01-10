@@ -32,6 +32,15 @@ local GetOreInfoFunction: RemoteFunction = Functions:WaitForChild("GetOreInfo")
 
 -- / / LOCAL FUNCTIONS
 
+local function GetPointOnCircle() -- Get a point on a circle with a given position
+    local Angle = math.random(1, 360)
+
+    local x = math.cos(Angle) * 5
+	local z = math.sin(Angle) * 5
+
+	return x, z
+end
+
 -- / / OBJECT FUNCTIONS
 
 function _Autominer.new(Player: Player, Autominer)
@@ -93,11 +102,15 @@ function _Autominer:Mine(Mode: string)
         return
     end
 
-    local TimeToMove = (self.Model.PrimaryPart.Position - TargetPosition).Magnitude / 16
-    MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetCFrame, TimeToMove, Target)
+    local x, z = GetPointOnCircle()
 
-    task.wait(TimeToMove)
-    self.Model:MoveTo(TargetPosition)
+    local ActualTargetPosition = Vector3.new(TargetPosition.X + x, 2, TargetPosition.Z + z)
+
+    local TimeToMove = (self.Model.PrimaryPart.Position - ActualTargetPosition).Magnitude / 13
+    MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetPosition, TargetCFrame, ActualTargetPosition, TimeToMove, Target)
+
+    task.wait(TimeToMove + 2)
+    self.Model:SetPrimaryPartCFrame(CFrame.lookAt(ActualTargetPosition, Vector3.new(TargetPosition.X, 2, TargetPosition.Y)))
 
     local TimeToMine = _Settings.Ores[Target["Type"]]["Health"] / (_Settings.Pickaxes["Level1"]["Speed"] / 3)
     AnimateAutominerEvent:FireAllClients(self.Player, self.Autominer, TimeToMine)

@@ -13,6 +13,7 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 local _Pickaxe = require(script.Pickaxe)
 local _Button = require(script.Button)
 local _Interacts = require(script.Interacts)
+local _Autominers = require(script.Autominers)
 local _UI = require(script.UI)
 
 -- / / VARIABLES
@@ -26,15 +27,11 @@ local Events: Folder = ReplicatedStorage:WaitForChild("Events")
 local LoadEvent: RemoteEvent = Events:WaitForChild("Load")
 local DropEvent: RemoteEvent = Events:WaitForChild("Drop")
 local EquipEvent: RemoteEvent = Events:WaitForChild("Equip")
-local MoveAutominerEvent: RemoteEvent = Events:WaitForChild("MoveAutominer")
-local AnimateAutominerEvent: RemoteEvent = Events:WaitForChild("AnimateAutominer")
-local AutominerMineEvent: RemoteEvent = Events:WaitForChild("AutominerMine")
 
 local Bindables: Folder = ReplicatedStorage:WaitForChild("Bindables")
 local LoadBindable: BindableEvent = Bindables:WaitForChild("Load")
 
-local Functions: Folder = ReplicatedStorage:WaitForChild("Functions")
-local GetOreInfoFunction: RemoteFunction = Functions:WaitForChild("GetOreInfo")
+--local Functions: Folder = ReplicatedStorage:WaitForChild("Functions")
 
 local LoadingScreenInfo = TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
 
@@ -55,11 +52,11 @@ local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. 
     _Interacts.Setup(PlayerData)
 
     for _, Button: Model in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Buttons"):GetChildren()) do
-        local CreateButton = _Button.new(Button)
+        local _--[[leave this blank cause i dont think we need it]] = _Button.new(Button)
     end
 
     local Refinery = workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Refinery")
-    local R1, R2 = _Button._new(Refinery:WaitForChild("Refine")), _Button._new(Refinery:WaitForChild("Instant"))
+    local _, _ --[[i think we can also leave these blank]] = _Button._new(Refinery:WaitForChild("Refine")), _Button._new(Refinery:WaitForChild("Instant"))
 
     LoadBindable:Fire(PlayerData)
 
@@ -114,18 +111,6 @@ local function CreateOre(DropperName, OreTable) -- Spawn an ore with given table
     until Ore:GetAttribute("Set") == true
 end
 
-local function FindOre(OreInfo: table) -- Function that finds the ore part (in workspace) with given info
-    local Ore
-
-    for _, _Ore in pairs(workspace:WaitForChild("ActiveOres"):GetChildren()) do
-        if _Ore:GetAttribute("ID") == OreInfo["ID"] then
-            Ore = _Ore
-        end
-    end
-
-    return Ore
-end
-
 -- / / REMOTES
 
 LoadEvent.OnClientEvent:Connect(PlayerLoaded)
@@ -135,30 +120,5 @@ DropEvent.OnClientEvent:Connect(function(DropTable)
     end
 end)
 EquipEvent.OnClientEvent:Connect(EquipPickaxe)
-
-GetOreInfoFunction.OnClientInvoke = function(OreInfo: table) -- Server inquires about info on this ore
-    local Ore: Part = FindOre(OreInfo)
-    return Ore.Position, Ore.CFrame, Ore:GetAttribute("Set"), Ore:GetAttribute("Targeted") -- So we return the ores position in the workspace as well as if it's set in place or not.
-end
-
-MoveAutominerEvent.OnClientEvent:Connect(function(PlayerName: string, Autominer: string, TargetCFrame: CFrame, Time: number, Target: table)
-    if PlayerName == LocalPlayer.Name then
-        local Ore: Part = FindOre(Target)
-        Ore:SetAttribute("Targeted", 2)
-        Ore.BrickColor = BrickColor.new("Really red")
-    end
-    print('move', Time)
-end)
-
-AnimateAutominerEvent.OnClientEvent:Connect(function(PlayerName: string, Autominer: string, Time: number)
-    print('animate', Time)
-end)
-
-AutominerMineEvent.OnClientEvent:Connect(function(OreInfo: table)
-    local Ore: Part = FindOre(OreInfo)
-    _UI.BackpackAdd(OreInfo["Type"])
-
-    Ore:Destroy()
-end)
 
 -- / / EVENTS
