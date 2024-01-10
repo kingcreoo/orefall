@@ -90,18 +90,30 @@ local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. 
     end)
 end
 
-local function CreateOre(DropperName, OreTable)
+local function CreateOre(DropperName, OreTable) -- Spawn an ore with given table
     local Ore: Instance = ReplicatedStorage:WaitForChild("Ores"):WaitForChild(OreTable[1]):Clone()
     Ore:SetAttribute("ID", OreTable[2])
+    Ore:SetAttribute("Set", false)
     Ore:SetAttribute("TotalHealth", _Settings.Ores[OreTable[1]]["Health"])
     Ore:SetAttribute("Health", _Settings.Ores[OreTable[1]]["Health"])
     Ore:SetAttribute("Strength", _Settings.Ores[OreTable[1]]["Strength"])
 
     Ore.Position = workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Droppers"):WaitForChild(DropperName):WaitForChild("Drop").Position
     Ore.Parent = workspace:WaitForChild("ActiveOres")
+
+    task.wait(1)
+
+    repeat -- Wait until the ore has settled, and then lock it in place
+        task.wait(.25)
+
+        if Ore:GetAttribute("Set") == true or Ore.AssemblyLinearVelocity.Magnitude >= 1 then continue end -- If the ore is already set, or is still dropping then wait again
+
+        Ore:SetAttribute("Set", true)
+        Ore.Anchored = true
+    until Ore:GetAttribute("Set") == true
 end
 
-local function FindOre(OreInfo: table)
+local function FindOre(OreInfo: table) -- Function that finds the ore part (in workspace) with given info
     local Ore
 
     for _, _Ore in pairs(workspace:WaitForChild("ActiveOres"):GetChildren()) do
@@ -123,17 +135,17 @@ DropEvent.OnClientEvent:Connect(function(DropTable)
 end)
 EquipEvent.OnClientEvent:Connect(EquipPickaxe)
 
-GetOreInfoFunction.OnClientInvoke = function(OreInfo: table)
+GetOreInfoFunction.OnClientInvoke = function(OreInfo: table) -- Server inquires about info on this ore
     local Ore: Part = FindOre(OreInfo)
-    return Ore.Position, Ore.CFrame, Ore.AssemblyLinearVelocity
+    return Ore.Position, Ore.CFrame, Ore:GetAttribute("Set") -- So we return the ores position in the workspace as well as if it's set in place or not.
 end
 
-MoveAutominerEvent.OnClientEvent:Connect(function()
-    print('move')
+MoveAutominerEvent.OnClientEvent:Connect(function(PlayerName: string, Autominer: string, TargetCFrame: CFrame, Time: number)
+    print('move', Time)
 end)
 
-AnimateAutominerEvent.OnClientEvent:Connect(function()
-    print('animate')
+AnimateAutominerEvent.OnClientEvent:Connect(function(PlayerName: string, Autominer: string, Time: number)
+    print('animate', Time)
 end)
 
 AutominerMineEvent.OnClientEvent:Connect(function(OreInfo: table)

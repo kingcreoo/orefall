@@ -87,13 +87,11 @@ function _Autominer:Mine(Mode: string)
         return
     end
 
-    local TargetPosition, TargetCFrame, Velocity = GetOreInfoFunction:InvokeClient(Players:WaitForChild(self.Player), Target)
-    if Velocity.X > 0.05 or Velocity.Y > 0.05 or Velocity.Z > 0.05 then
+    local TargetPosition, TargetCFrame, Set = GetOreInfoFunction:InvokeClient(Players:WaitForChild(self.Player), Target)
+    if Set == false then
         task.wait(1)
         return
     end
-
-    print(Target)
 
     local TimeToMove = (self.Model.PrimaryPart.Position - TargetPosition).Magnitude / 16
     MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetCFrame, TimeToMove)
@@ -111,6 +109,11 @@ function _Autominer:Mine(Mode: string)
     _Data.Set(Players:WaitForChild(self.Player), PlayerData)
 
     AutominerMineEvent:FireClient(Players:WaitForChild(self.Player), Target)
+
+    local success = _Ores.RemoveOre(Players:WaitForChild(self.Player), Target["ID"]) -- Remove ore from player's database
+    if not success then
+        warn("ore does not exist in player's database")
+    end
 
     return
 end

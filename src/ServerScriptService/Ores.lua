@@ -110,6 +110,16 @@ end
 
 -- / / FUNCTIONS
 
+function _Ores.RemoveOre(Player: Player, OreID: string) -- Removes an ore from a player's database with a given OreID
+    if not OreDataBase[Player.Name][OreID] then
+        return false
+    end
+
+    OreDataBase[Player.Name][OreID] = nil
+
+    return true
+end
+
 function _Ores.DropForPlayer(Player)
     OreDataBase[Player.Name] = {}
 
@@ -174,6 +184,11 @@ function _Ores.Validate(Player: Player, OreID: string) -- Validate that the play
     -- Now we can go about rewarding actual players, who actually mined the ore
 
     PlayerTimes[Player.Name] = workspace:GetServerTimeNow() - ServerStartTime -- First, set the player's new lastminetime for next calculations
+
+    local success = _Ores.RemoveOre(Player, OreID) -- Remove ore from player's database
+    if not success then
+        warn('error')
+    end
 
     local PlayerData = _Data.Get(Player)
     PlayerData["Backpack"][OreType] += 1
