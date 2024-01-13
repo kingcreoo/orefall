@@ -118,7 +118,15 @@ function _Pickaxe:FirstTarget()
         return 1
     end
 
+    if Target:GetAttribute("Targeted") > 1 then
+        warn("Ore is being mined by an autominer!")
+        self.Tool:Deactivate()
+        LocalPlayer.Character.Humanoid:UnequipTools()
+        return 1
+    end
+
     self.Target = Target
+    Highlight.Adornee = Target
     self.TargetTick += 1
 
     return Target
@@ -146,7 +154,7 @@ function _Pickaxe:Activate()
     self.Active = true
     local t = self:FirstTarget()
     if t == 1 then return end
-    self.Target = t
+    --self.Target = t
 
     self.Connection = Mouse.Move:Connect(function()
         local MouseTarget = Mouse.Target
@@ -194,6 +202,8 @@ function _Pickaxe:Activate()
 
                     self.Target = nil
                     self.TargetTick = 0
+
+                    self:FirstTarget()
                 --else
                     --Drop gui here
                 end
