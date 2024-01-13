@@ -240,6 +240,11 @@ end
 
 local function ValidateSelection(PlayerName, Selection)
     local TargetPosition, TargetCFrame, Set, Targeted = GetOreInfoFunction:InvokeClient(Players:WaitForChild(PlayerName), Selection)
+
+    if not TargetPosition then
+        return 0 -- there was no ore on the client side, lets just break up this transaction and start again
+    end
+
     if Set == false or Targeted > 0 then
         return false
     else
@@ -256,6 +261,10 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string, AutominerNam
             if not Best then
                 local SUCCESS, TargetPosition, TargetCFrame = ValidateSelection(PlayerName, Selection)
 
+                if SUCCESS == 0 then
+                    return nil
+                end
+
                 if SUCCESS then
                     Best = Selection
                     Position = TargetPosition
@@ -268,6 +277,10 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string, AutominerNam
             if _Settings.OreOrderKeys[Selection["Type"]] > _Settings.OreOrderKeys[Best["Type"]] then
                 local SUCCESS, TargetPosition, TargetCFrame = ValidateSelection(PlayerName, Selection)
 
+                if SUCCESS == 0 then
+                    return nil
+                end
+
                 if SUCCESS then
                     Best = Selection
                     Position = TargetPosition
@@ -278,19 +291,41 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string, AutominerNam
 
         return Best, Position, cFrame
     elseif Mode == "Worst" then
-        local Worst
+        local Worst, Position, cFrame
+
         for _, Selection in pairs(OreDataBase[PlayerName]) do
             if not Worst then
-               Worst = Selection
-               continue
+                local SUCCESS, TargetPosition, TargetCFrame = ValidateSelection(PlayerName, Selection)
+
+                if SUCCESS == 0 then
+                    return nil
+                end
+
+                if SUCCESS then
+                    Worst = Selection
+                    Position = TargetPosition
+                    cFrame = TargetCFrame
+                end
+
+                continue
             end
 
             if _Settings.OreOrderKeys[Selection["Type"]] < _Settings.OreOrderKeys[Worst["Type"]] then
-                Worst = Selection
+                local SUCCESS, TargetPosition, TargetCFrame = ValidateSelection(PlayerName, Selection)
+
+                if SUCCESS == 0 then
+                    return nil
+                end
+
+                if SUCCESS then
+                    Worst = Selection
+                    Position = TargetPosition
+                    cFrame = TargetCFrame
+                end
             end
         end
 
-        return Worst
+        return Worst, Position, cFrame
     elseif Mode == "Random" then
         local KeyArray = {}
         for Key, _ in pairs(OreDataBase[PlayerName]) do
@@ -304,6 +339,10 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string, AutominerNam
 
             local SUCCESS, TargetPosition, TargetCFrame = ValidateSelection(PlayerName, Selection)
 
+            if SUCCESS == 0 then
+                return nil
+            end
+            
             if SUCCESS then
                 return Selection, TargetPosition, TargetCFrame
             end
