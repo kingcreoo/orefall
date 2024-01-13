@@ -198,7 +198,7 @@ function _Pickaxe:Activate()
                     --Drop gui here
                 end
             else
-                if Target:GetAttribute("Targeted") == false then
+                if Target:GetAttribute("Targeted") == 0 then
                     Target:SetAttribute("Targeted", 1)
                 end
                 Target:SetAttribute("Health", Health - Damage)

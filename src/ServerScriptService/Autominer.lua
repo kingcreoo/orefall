@@ -110,7 +110,7 @@ function _Autominer:Mine(Mode: string)
     MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, TargetPosition, TargetCFrame, ActualTargetPosition, TimeToMove, Target)
 
     task.wait(TimeToMove + 2)
-    self.Model:SetPrimaryPartCFrame(CFrame.lookAt(ActualTargetPosition, Vector3.new(TargetPosition.X, 2, TargetPosition.Y)))
+    self.Model:SetPrimaryPartCFrame(CFrame.lookAt(ActualTargetPosition, Vector3.new(TargetPosition.X, 2, TargetPosition.Z)))
 
     local TimeToMine = _Settings.Ores[Target["Type"]]["Health"] / (_Settings.Pickaxes["Level1"]["Speed"] / 3)
     AnimateAutominerEvent:FireAllClients(self.Player, self.Autominer, TimeToMine)
