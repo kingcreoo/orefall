@@ -48,6 +48,11 @@ end
 
 GetOreInfoFunction.OnClientInvoke = function(OreInfo: table) -- Server inquires about info on this ore
     local Ore: Part = FindOre(OreInfo)
+
+    if not Ore then
+        return nil
+    end
+    
     return Ore.Position, Ore.CFrame, Ore:GetAttribute("Set"), Ore:GetAttribute("Targeted") -- So we return the ores position in the workspace as well as if it's set in place or not.
 end
 

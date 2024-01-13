@@ -242,10 +242,14 @@ local function ValidateSelection(PlayerName, Selection)
     local TargetPosition, TargetCFrame, Set, Targeted = GetOreInfoFunction:InvokeClient(Players:WaitForChild(PlayerName), Selection)
 
     if not TargetPosition then
+       --warn("Ore does not exist.")
+
         return 0 -- there was no ore on the client side, lets just break up this transaction and start again
     end
 
     if Set == false or Targeted > 0 then
+        --warn("Ore was not set or already targeted.")
+
         return false
     else
         return true, TargetPosition, TargetCFrame
