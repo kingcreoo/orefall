@@ -247,7 +247,9 @@ local function ValidateSelection(PlayerName, Selection)
     end
 end
 
-function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
+function _Ores.GetAutominerTarget(PlayerName: string, Mode: string, AutominerName: string)
+    task.wait(0.1 * tonumber(string.sub(AutominerName, 10, 10)))
+
     if Mode == "Best" then
         local Best, Position, cFrame
         for _, Selection in pairs(OreDataBase[PlayerName]) do

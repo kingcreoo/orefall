@@ -91,7 +91,7 @@ function _Autominer:Off()
 end
 
 function _Autominer:Mine(Mode: string)
-    local Target, TargetPosition, TargetCFrame = _Ores.GetAutominerTarget(self.Player, Mode)
+    local Target, TargetPosition, TargetCFrame = _Ores.GetAutominerTarget(self.Player, Mode, self.Autominer)
     if not Target then
         task.wait(1)
         return
