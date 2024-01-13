@@ -34,6 +34,8 @@ local ValidateFunction: RemoteFunction = Functions:WaitForChild("Validate")
 
 local RefineEvent: RemoteEvent = Events:WaitForChild("Refine")
 
+local GetOreInfoFunction: RemoteFunction = Functions:WaitForChild("GetOreInfo")
+
 -- / / LOCAL FUNCTIONS
 
 local function RoundNumberToDecimal(Number, DecimalPlace)
@@ -229,21 +231,50 @@ function _Ores.InstantSell(Player: Player)
     RefineEvent:FireClient(Player)
 end
 
+local function RandomSelection(PlayerName, KeyArray)
+    local RandomNumber = math.random(1, #KeyArray)
+    local Selection = OreDataBase[PlayerName][KeyArray[RandomNumber]]
+
+    return Selection
+end
+
+local function ValidateSelection(PlayerName, Selection)
+    local TargetPosition, TargetCFrame, Set, Targeted = GetOreInfoFunction:InvokeClient(Players:WaitForChild(PlayerName), Selection)
+    if Set == false or Targeted > 0 then
+        return false
+    else
+        return true, TargetPosition, TargetCFrame
+    end
+end
+
 function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
     if Mode == "Best" then
-        local Best
+        local Best, Position, cFrame
         for _, Selection in pairs(OreDataBase[PlayerName]) do
             if not Best then
-                Best = Selection
+                local SUCCESS, TargetPosition, TargetCFrame = ValidateSelection(PlayerName, Selection)
+
+                if SUCCESS then
+                    Best = Selection
+                    Position = TargetPosition
+                    cFrame = TargetCFrame
+                end
+
                 continue
             end
 
             if _Settings.OreOrderKeys[Selection["Type"]] > _Settings.OreOrderKeys[Best["Type"]] then
-                Best = Selection
+                local SUCCESS, TargetPosition, TargetCFrame = ValidateSelection(PlayerName, Selection)
+
+                if SUCCESS then
+                    Best = Selection
+                    Position = TargetPosition
+                    cFrame = TargetCFrame
+                end
             end
         end
 
-        return Best
+        return Best, Position, cFrame
     elseif Mode == "Worst" then
         local Worst
         for _, Selection in pairs(OreDataBase[PlayerName]) do
@@ -264,10 +295,17 @@ function _Ores.GetAutominerTarget(PlayerName: string, Mode: string)
             table.insert(KeyArray, Key)
         end
 
-        local RandomNumber = math.random(1, #KeyArray)
-        local Selection = OreDataBase[PlayerName][KeyArray[RandomNumber]]
+        local Selection
 
-        return Selection
+        for _ = 1, 5 do
+            Selection = RandomSelection(PlayerName, KeyArray)
+
+            local SUCCESS, TargetPosition, TargetCFrame = ValidateSelection(PlayerName, Selection)
+
+            if SUCCESS then
+                return Selection, TargetPosition, TargetCFrame
+            end
+        end
     end
 
     return nil
