@@ -28,6 +28,7 @@ local Functions: Folder = ReplicatedStorage:WaitForChild("Functions")
 local MoveAutominerEvent: RemoteEvent = Events:WaitForChild("MoveAutominer")
 local AnimateAutominerEvent: RemoteEvent = Events:WaitForChild("AnimateAutominer")
 local AutominerMineEvent: RemoteEvent = Events:WaitForChild("AutominerMine")
+local DisableAutominerEvent: RemoteEvent = Events:WaitForChild("DisableAutominer")
 local GetOreInfoFunction: RemoteFunction = Functions:WaitForChild("GetOreInfo")
 
 -- / / LOCAL FUNCTIONS
@@ -80,11 +81,11 @@ function _Autominer:Off()
         return
     end
 
-    local Time = (self.Model.PrimaryPart.Position - self.DockPosition).Magnitude / 16
-    MoveAutominerEvent:FireAllClients(self.Player, self.Autominer, self.DockCFrame, Time)
+    local Time = (self.Model.PrimaryPart.Position - self.DockPosition).Magnitude / 13
+    DisableAutominerEvent:FireAllClients(self.Player, self.Autominer, self.DockPosition, self.DockCFrame, Time)
 
     task.wait(Time)
-    self.Model:MoveTo(self.DockPosition)
+    self.Model:SetPrimaryPartCFrame(self.DockCFrame)
 
     return
 end
