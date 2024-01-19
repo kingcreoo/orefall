@@ -94,13 +94,13 @@ local function Refine(Player: Player, Ore: string, Time: number)
 
     repeat
 
-    task.wait(RefineTime) -- Add in boosts here when we get to that
+    task.wait(RefineTime / (Player:GetAttribute("RefinerySpeed") + _Settings.GlobalBoosts["RefinerySpeed"]))
 
     if not PlayerFunctions[Player.Name][Ore] or PlayerFunctions[Player.Name][Ore] ~= Time or PlayerQueues[Player.Name][Ore] <= 0 then return end
 
     local PlayerData = _Data.Get(Player) -- get player data
     PlayerQueues[Player.Name][Ore] -= 1 -- remove 1 from this ore's queue
-    PlayerData["leaderstats"]["Cash"] += _Settings.Ores[Ore]["Reward"] -- add to player's cash
+    PlayerData["leaderstats"]["Cash"] += (_Settings.Ores[Ore]["Reward"] * (Player:GetAttribute("Money") + _Settings.GlobalBoosts["Money"])) -- add to player's cash
     _Data.Set(Player, PlayerData) -- set data
 
     until PlayerQueues[Player.Name][Ore] <= 0
@@ -129,13 +129,13 @@ function _Ores.DropForPlayer(Player)
         while Players:FindFirstChild(Player.Name) do
             local PlayerData = _Data.Get(Player)
 
-            task.wait(8) -- In the future, find this time based off of player's boosts & server boosts
+            task.wait(8 - (Player:GetAttribute("DropSpeed") + _Settings.GlobalBoosts["DropSpeed"]))
             local DropTable = {}
 
             for _, Dropper in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(Player.Name):WaitForChild("Droppers"):GetChildren()) do
                 if PlayerData["Droppers"][Dropper.Name] ~= 1 then continue end
 
-                local Luck = _Settings.Droppers[Dropper.Name]["Luck"] -- In the future, find this luck based off dropper's luck, player's luck, & boosts
+                local Luck = _Settings.Droppers[Dropper.Name]["Luck"] * (Player:GetAttribute("Luck") + _Settings.GlobalBoosts["Luck"])
 
                 local SelectedOre = SelectOre(Luck) -- Choose an ore
 
@@ -167,7 +167,7 @@ function _Ores.Validate(Player: Player, OreID: string) -- Validate that the play
     end
 
     local TimeOfCreation = string.split(OreID, "-")[1] -- Get the time in which this ore was created (approximately)
-    local TimeToDestroyOre = _Settings.Ores[OreType]["Health"] / _Settings.Pickaxes[Player:WaitForChild("pickaxe").Value]["Speed"]
+    local TimeToDestroyOre = _Settings.Ores[OreType]["Health"] / (_Settings.Pickaxes[Player:WaitForChild("pickaxe").Value]["Speed"] * (Player:GetAttribute("MineSpeed") + _Settings.GlobalBoosts["MineSpeed"]))
     local TimeOfPreviousDestruction = PlayerTimes[Player.Name] -- The time in which player destroyed the last ore (or time of activation)
     local TimeOreDestroyedIn = TimeOfDestruction - TimeOfCreation
 
@@ -193,7 +193,7 @@ function _Ores.Validate(Player: Player, OreID: string) -- Validate that the play
     end
 
     local PlayerData = _Data.Get(Player)
-    PlayerData["Backpack"][OreType] += 1
+    PlayerData["Backpack"][OreType] += 1 * (Player:GetAttribute("Ores") + _Settings.GlobalBoosts["Ores"])
     _Data.Set(Player, PlayerData)
 
     return true
@@ -223,7 +223,7 @@ function _Ores.InstantSell(Player: Player)
     for Ore: string, Amount: number in pairs(PlayerData["Backpack"]) do
         if Amount == 0 then continue end
 
-        PlayerData["leaderstats"]["Cash"] += (_Settings.Ores[Ore]["RewardInstant"] * Amount)
+        PlayerData["leaderstats"]["Cash"] += ((_Settings.Ores[Ore]["RewardInstant"] * Amount) * (Player:GetAttribute("Money") + _Settings.GlobalBoosts["Money"]))
         PlayerData["Backpack"][Ore] = 0
     end
 

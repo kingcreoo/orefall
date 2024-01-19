@@ -93,7 +93,7 @@ function _UI.BackpackAdd(Ore: string)
         local Name = String[1]
         local Amount = String[2]
 
-        OreLabel.Text = Name .. ": " .. tostring(tonumber(Amount) + 1)
+        OreLabel.Text = Name .. ": " .. tostring(tonumber(Amount) + (1 + (LocalPlayer:GetAttribute("Ores") + _Settings.GlobalBoosts["Ores"])))
     end
 end
 

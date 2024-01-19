@@ -149,7 +149,7 @@ function _Pickaxe:Activate()
     ActivateFunction:InvokeServer() -- Tell the server that we are activating this pickaxe
 
     local Strength = _Settings.Pickaxes[self.Type]["Strength"]
-    local Damage = _Settings.Pickaxes[self.Type]["Speed"] / 10
+    local Damage = _Settings.Pickaxes[self.Type]["Speed"] * (LocalPlayer:GetAttribute("MineSpeed") + _Settings.GlobalBoosts["MineSpeed"]) / 10
 
     self.Active = true
     local t = self:FirstTarget()

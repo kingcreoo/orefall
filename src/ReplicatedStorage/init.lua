@@ -5,6 +5,15 @@ local Settings = {}
 
 Settings.Version = "0.6"
 
+Settings.GlobalBoosts = {
+    ["Money"] = 0,
+    ["RefinerySpeed"] = 0,
+    ["MineSpeed"] = 0,
+    ["Ores"] = 0,
+    ["Luck"] = 0,
+    ["DropSpeed"] = 0
+}
+
 Settings.Locations = {
     [1] = {["CFrame"] = CFrame.new(40,0,0), ["Occupied"] = false},
     [2] = {["CFrame"] = CFrame.new(-40,0,0), ["Occupied"] = false},

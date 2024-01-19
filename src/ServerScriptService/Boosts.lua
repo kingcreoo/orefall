@@ -112,8 +112,6 @@ function _Boosts.Give(Player: Player, Type: string, Multiplier: number, Duration
 
     _Boosts.Set(Player) -- Set player's boost attributes for clients to read
 
-    print("Boost started: ", BoostID, Duration)
-
     task.wait(Duration) -- Wait until boost is finished
 
     if Players:FindFirstChild(Player.Name) and _Data.Get(Player)["Boosts"][BoostID] then
@@ -121,8 +119,6 @@ function _Boosts.Give(Player: Player, Type: string, Multiplier: number, Duration
 
         if not SUCCESS then
             _Boosts.Refresh(Player) -- If the boost did not exist, for security reasons we will refresh the player's boosts with new IDs
-        else
-            print("Boost ended: ", BoostID)
         end
     end
 end
