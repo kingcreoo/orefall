@@ -16,7 +16,26 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 -- / / VARIABLES
 
+local BoostTypes = {"Money", "RefinerySpeed", "MineSpeed", "Ores", "Luck", "DropSpeed"}
+
 -- / / MODULE FUNCTIONS
+
+function _Boosts.Set(Player: Player)
+    local PlayerData = _Data.Get(Player)
+
+    local Boosts = {}
+    for _, BoostType in pairs(BoostTypes) do -- For each boost type, create a number variable inside a table
+        Boosts[BoostType] = 1
+    end
+
+    for _, Boost in pairs(PlayerData["Boosts"]) do -- For each of the players boosts, add multiplier to ^ boosts variables
+        Boosts[Boost["Type"]] += (Boost["Multiplier"] - 1)
+    end
+
+    for BoostType, Multiplier in pairs(Boosts) do -- For each boost type set an attribute under the player object with it's multiplier
+        Player:SetAttribute(BoostType, Multiplier)
+    end
+end
 
 function _Boosts.Rejoin(Player: Player)
     local PlayerData = _Data.Get(Player)
@@ -32,6 +51,8 @@ function _Boosts.Rejoin(Player: Player)
 
     PlayerData["Boosts"] = {} -- Set player's boosts to nil to prepare for creation of new boosts
     _Data.Set(Player, PlayerData)
+
+    _Boosts.Set(Player) -- Set player's boost attributes for clients to read (they will be set to 1 for now)
 
     for _, Boost in pairs(BoostsToCreate) do -- Create new boosts
         _Boosts.Give(Player, Boost[1], Boost[2], Boost[3])
@@ -65,6 +86,8 @@ function _Boosts.Remove(Player: Player, BoostID: string)
         PlayerData["Boosts"][BoostID] = nil -- If this boost exists, then remove it from the player's data
         _Data.Set(Player, PlayerData)
 
+        _Boosts.Set(Player) -- Set player's boost attributes for clients to read
+
         return true
     else
         return false -- If this boost does not exist, then return false for debugging purposes
@@ -87,6 +110,8 @@ function _Boosts.Give(Player: Player, Type: string, Multiplier: number, Duration
     PlayerData["Boosts"][BoostID] = NewBoost
     _Data.Set(Player, PlayerData)
 
+    _Boosts.Set(Player) -- Set player's boost attributes for clients to read
+
     print("Boost started: ", BoostID, Duration)
 
     task.wait(Duration) -- Wait until boost is finished
@@ -101,6 +126,12 @@ function _Boosts.Give(Player: Player, Type: string, Multiplier: number, Duration
         end
     end
 end
+
+local test = ReplicatedStorage:WaitForChild('Give')
+
+test.Event:Connect(function(a, b, c, d)
+    _Boosts.Give(a,b,c,d)
+end)
 
 -- / / RETURN
 return _Boosts

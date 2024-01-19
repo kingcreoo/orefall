@@ -40,10 +40,12 @@ Settings.DefaultData = { -- In the future we will have to write a system that cr
     },
     ["Boosts"] = {},
     ["RebirthBoosts"] = {
-        ["XP"] = 1.00,
-        ["Money"] = 1.00,
-        ["Refinery"] = 1.00,
-        ["Luck"] = 1.00
+        ["Money"] = 1,
+        ["RefinerySpeed"] = 1,
+        ["MineSpeed"] = 1,
+        ["Ores"] = 1,
+        ["Luck"] = 1,
+        ["DropSpeed"] = 1
     },
     ["Version"] = Settings.Version,
     ["LeaveTime"] = nil
