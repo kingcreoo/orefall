@@ -104,6 +104,7 @@ end
 function _Data.Remove(Player: Player)
     local PlayerData = DeepCopy(Database[Player.Name]) -- Make a copy of player's data for safe keeping
     PlayerData["Version"] = _Settings.Version -- Set player's data VERSION for data security
+    PlayerData["LeaveTime"] = os.time() -- Set player's leave time
     Database[Player.Name] = nil -- Delete player's data
 
     local Success, ErrorMessage = pcall(function()

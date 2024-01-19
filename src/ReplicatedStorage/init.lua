@@ -3,7 +3,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Settings = {}
 
-Settings.Version = "0.5"
+Settings.Version = "0.6"
 
 Settings.Locations = {
     [1] = {["CFrame"] = CFrame.new(40,0,0), ["Occupied"] = false},
@@ -12,7 +12,8 @@ Settings.Locations = {
 
 Settings.DefaultData = { -- In the future we will have to write a system that creates default data based off of the game's files.
     ["leaderstats"] = {
-        ["Cash"] = 100
+        ["Cash"] = 100,
+        ["Rebirths"] = 0
     },
     ["Pickaxe"] = "Level1",
     ["Pickaxes"] = {
@@ -37,7 +38,15 @@ Settings.DefaultData = { -- In the future we will have to write a system that cr
         ["Emerald"] = 0,
         ["Ruby"] = 0,
     },
-    ["Version"] = Settings.Version
+    ["Boosts"] = {},
+    ["RebirthBoosts"] = {
+        ["XP"] = 1.00,
+        ["Money"] = 1.00,
+        ["Refinery"] = 1.00,
+        ["Luck"] = 1.00
+    },
+    ["Version"] = Settings.Version,
+    ["LeaveTime"] = nil
 }
 
 Settings.Ores = {

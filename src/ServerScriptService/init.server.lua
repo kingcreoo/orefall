@@ -17,6 +17,7 @@ local _Data = require(ServerScriptService:WaitForChild("Server"):WaitForChild("D
 local _Ores = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Ores"))
 local _Pickaxes = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Pickaxes"))
 local _Autominer = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Autominer"))
+local _Boosts = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Boosts"))
 
 -- / / VARIABLES
 
@@ -80,7 +81,7 @@ local function LoadPlayer(Player: Player)
     end
 
     _Data.Set(Player, PlayerData)
-
+    _Boosts.Rejoin(Player)
 
     local pickaxe = Instance.new("StringValue")
     pickaxe.Parent = Player
