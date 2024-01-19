@@ -14,6 +14,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 local _Data = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Data"))
 local _Ores = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Ores"))
+local _Obby = require(ServerScriptService:WaitForChild("Server"):WaitForChild("Obby"))
 
 -- / / FUNCTIONS
 
@@ -90,6 +91,22 @@ function Tower:Listen(Player)
             end
         end)
     end
+
+    local ObbyButton = self.Model:WaitForChild("ObbyButton")
+    local obby_deb = false
+    ObbyButton.Touch.Touched:Connect(function(hit)
+        if obby_deb then return end
+        obby_deb = true
+
+        if hit.Parent:FindFirstChildOfClass("Humanoid") and hit.Parent.Name == Player.Name then
+            coroutine.wrap(function()
+                _Obby.Add(Player)
+            end)()
+
+            task.wait(1)
+            obby_deb = false
+        end
+    end)
 
     local Refinery = self.Model:WaitForChild("Refinery")
     local Refine, Instant = Refinery:WaitForChild("Refine"), Refinery:WaitForChild("Instant")

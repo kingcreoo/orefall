@@ -21,6 +21,10 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 local InteractsGui = PlayerGui:WaitForChild("Interacts")
 local HUDGui = PlayerGui:WaitForChild("HUD")
 
+local BoostsFrame = HUDGui:WaitForChild("Boosts")
+
+local StageProgressFrame = HUDGui:WaitForChild("StageProgress")
+
 local AutominersFrame = HUDGui:WaitForChild("AutominersFrame")
 local AutominerButton = HUDGui:WaitForChild("Autominers")
 
@@ -36,6 +40,8 @@ local Bindables = ReplicatedStorage:WaitForChild("Bindables")
 
 local RefineEvent: RemoteEvent = Events:WaitForChild("Refine")
 local InstantEvent: RemoteEvent = Events:WaitForChild("Instant")
+local StageProgressEvent: RemoteEvent = Events:WaitForChild("StageProgress")
+local GiveBoostEvent: RemoteEvent = Events:WaitForChild("GiveBoost")
 
 local EquipFunction: RemoteFunction = Functions:WaitForChild("Equip")
 local PurchaseFunction: RemoteFunction = Functions:WaitForChild("Purchase")
@@ -46,6 +52,14 @@ local PurchaseAutominerBindable: BindableEvent = Bindables:WaitForChild("Purchas
 
 local Green = Color3.fromRGB(85, 170, 0)
 local Red = Color3.fromRGB(255, 73, 73)
+
+-- / / LOCAL FUNCTIONS
+
+local function FormatTime(TimeInSeconds: number)
+    local Minutes = math.floor(TimeInSeconds / 60)
+    local Seconds = TimeInSeconds % 60
+    return string.format("%02d:%02d", Minutes, Seconds)
+end
 
 -- / / AUTOMINERS
 
@@ -166,6 +180,39 @@ LoadBindable.Event:Connect(function(PlayerData: table)
             TargetButton.BackgroundColor3 = Red
         end
     end
+end)
+
+GiveBoostEvent.OnClientEvent:Connect(function(Boost: table)
+    print('a')
+
+    local ThisBoost: Frame = BoostsFrame:WaitForChild("Template"):Clone()
+    ThisBoost.Parent = BoostsFrame:WaitForChild("Folder")
+    ThisBoost.Text = Boost["Type"] .. " - " .. Boost["Multiplier"] .. "x - " .. FormatTime(Boost["Duration"] - (os.time() - Boost["StartTime"]))
+    ThisBoost.Visible = true
+
+    repeat
+        task.wait(1)
+        ThisBoost.Text = Boost["Type"] .. " - " .. Boost["Multiplier"] .. "x - " .. FormatTime(Boost["Duration"] - (os.time() - Boost["StartTime"]))
+    until Boost["Duration"] - (os.time() - Boost["StartTime"]) <= 0
+
+    ThisBoost:Destroy()
+end)
+
+StageProgressEvent.OnClientEvent:Connect(function(TransactionType: number, Progress: number)
+    if TransactionType == 1 then
+        StageProgressFrame.Visible = true
+        StageProgressFrame:WaitForChild("Label").Text = "Stage: 1/10"
+    elseif TransactionType == 2 then
+        StageProgressFrame:WaitForChild("Label").Text = "Stage: " .. tostring(Progress + 1) .. "/10"
+    else
+        StageProgressFrame.Visible = false
+    end
+end)
+
+StageProgressFrame:WaitForChild("Exit").MouseButton1Down:Connect(function()
+    StageProgressEvent:FireServer()
+
+    StageProgressFrame.Visible = false
 end)
 
 -- / / RETURN

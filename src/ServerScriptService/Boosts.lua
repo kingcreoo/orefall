@@ -18,6 +18,9 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 local BoostTypes = {"Money", "RefinerySpeed", "MineSpeed", "Ores", "Luck", "DropSpeed"}
 
+local Events = ReplicatedStorage:WaitForChild("Events")
+local GiveBoostEvent: RemoteEvent = Events:WaitForChild("GiveBoost")
+
 -- / / MODULE FUNCTIONS
 
 function _Boosts.Set(Player: Player)
@@ -111,23 +114,20 @@ function _Boosts.Give(Player: Player, Type: string, Multiplier: number, Duration
     _Data.Set(Player, PlayerData)
 
     _Boosts.Set(Player) -- Set player's boost attributes for clients to read
+    GiveBoostEvent:FireClient(Player, NewBoost) -- Tell player's client they have a boost so that they can display it on their screen
 
-    task.wait(Duration) -- Wait until boost is finished
+    coroutine.wrap(function()
+        task.wait(Duration) -- Wait until boost is finished
 
-    if Players:FindFirstChild(Player.Name) and _Data.Get(Player)["Boosts"][BoostID] then
-        local SUCCESS = _Boosts.Remove(Player, BoostID) -- If the player is still in the server & the boost still exists, then remove it from the player
+        if Players:FindFirstChild(Player.Name) and _Data.Get(Player)["Boosts"][BoostID] then
+            local SUCCESS = _Boosts.Remove(Player, BoostID) -- If the player is still in the server & the boost still exists, then remove it from the player
 
-        if not SUCCESS then
-            _Boosts.Refresh(Player) -- If the boost did not exist, for security reasons we will refresh the player's boosts with new IDs
+            if not SUCCESS then
+                _Boosts.Refresh(Player) -- If the boost did not exist, for security reasons we will refresh the player's boosts with new IDs
+            end
         end
-    end
+    end)()
 end
-
-local test = ReplicatedStorage:WaitForChild('Give')
-
-test.Event:Connect(function(a, b, c, d)
-    _Boosts.Give(a,b,c,d)
-end)
 
 -- / / RETURN
 return _Boosts
