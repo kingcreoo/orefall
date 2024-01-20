@@ -50,6 +50,7 @@ end
 
 local function PlayerLoaded(PlayerData: table) -- Player has been fully loaded. End load screen.
     _Interacts.Setup(PlayerData)
+    _UI.BackpackSetup(PlayerData)
 
     for _, Button: Model in pairs(workspace:WaitForChild("ActiveTowers"):WaitForChild(LocalPlayer.Name):WaitForChild("Buttons"):GetChildren()) do
         local _--[[leave this blank cause i dont think we need it]] = _Button.new(Button)

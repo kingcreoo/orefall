@@ -95,6 +95,21 @@ end)
 
 -- / / BACKPACK
 
+function _UI.BackpackSetup(PlayerData: table)
+    for Ore, Amount in pairs(PlayerData["Backpack"]) do
+        if Amount <= 0 then continue end
+
+        local OreLabel: TextLabel = OresIndex:WaitForChild(Ore).Value
+
+        local String = string.split(OreLabel.Text, ": ")
+        local Name = String[1]
+
+        OreLabel.Text = Name .. ": " .. tostring(Amount)
+
+        OreLabel.Visible = true
+    end
+end
+
 function _UI.BackpackAdd(Ore: string)
     local OreLabel: TextLabel = OresIndex:WaitForChild(Ore).Value
 
@@ -107,7 +122,7 @@ function _UI.BackpackAdd(Ore: string)
         local Name = String[1]
         local Amount = String[2]
 
-        OreLabel.Text = Name .. ": " .. tostring(tonumber(Amount) + (1 + (LocalPlayer:GetAttribute("Ores") + _Settings.GlobalBoosts["Ores"])))
+        OreLabel.Text = Name .. ": " .. tostring(tonumber(Amount) + (1 * (LocalPlayer:GetAttribute("Ores") + _Settings.GlobalBoosts["Ores"])))
     end
 end
 
