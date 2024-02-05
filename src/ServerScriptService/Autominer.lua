@@ -60,7 +60,12 @@ function _Autominer.new(Player: Player, Autominer)
     end
 
     coroutine.wrap(function()
-        while Players:FindFirstChild(Player.Name) and _Data.Get(Player)["Autominers"][self.Autominer] == 1 do
+        while Players:FindFirstChild(Player.Name) do
+            if _Data.Get(Player)["Autominers"][self.Autominer] ~= 1 then
+                task.wait(1)
+                continue
+            end
+
             local Mode = self.Mode
 
             if Mode == "Off" then
