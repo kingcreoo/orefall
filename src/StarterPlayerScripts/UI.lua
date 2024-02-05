@@ -16,14 +16,18 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 -- / / VARIABLES
 
 local LocalPlayer = Players.LocalPlayer
+local PlayerModule = require(LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"))
+local Controls = PlayerModule:GetControls()
 
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 local InteractsGui = PlayerGui:WaitForChild("Interacts")
 local HUDGui = PlayerGui:WaitForChild("HUD")
+local SplashGui = PlayerGui:WaitForChild("Splash")
+local ObbyGui = PlayerGui:WaitForChild("Obby")
 
 local BoostsFrame = HUDGui:WaitForChild("Boosts")
 
-local StageProgressFrame = HUDGui:WaitForChild("StageProgress")
+local StageProgressFrame = ObbyGui:WaitForChild("StageProgress")
 
 local AutominersFrame = HUDGui:WaitForChild("AutominersFrame")
 local AutominerButton = HUDGui:WaitForChild("Autominers")
@@ -34,6 +38,9 @@ local EquippedPickaxe = PickaxesFrame:WaitForChild("Equipped")
 local BackpackFrame: Frame = HUDGui:WaitForChild("Backpack")
 local OresIndex = BackpackFrame:WaitForChild("Index")
 
+local SplashImage = SplashGui:WaitForChild("Image")
+local SplashInfo = TweenInfo.new(.75, Enum.EasingStyle.Circular, Enum.EasingDirection.InOut)
+
 local Functions = ReplicatedStorage:WaitForChild("Functions")
 local Events = ReplicatedStorage:WaitForChild("Events")
 local Bindables = ReplicatedStorage:WaitForChild("Bindables")
@@ -42,6 +49,7 @@ local RefineEvent: RemoteEvent = Events:WaitForChild("Refine")
 local InstantEvent: RemoteEvent = Events:WaitForChild("Instant")
 local StageProgressEvent: RemoteEvent = Events:WaitForChild("StageProgress")
 local GiveBoostEvent: RemoteEvent = Events:WaitForChild("GiveBoost")
+local SplashEvent: RemoteEvent = Events:WaitForChild("Splash")
 
 local EquipFunction: RemoteFunction = Functions:WaitForChild("Equip")
 local PurchaseFunction: RemoteFunction = Functions:WaitForChild("Purchase")
@@ -198,8 +206,6 @@ LoadBindable.Event:Connect(function(PlayerData: table)
 end)
 
 GiveBoostEvent.OnClientEvent:Connect(function(Boost: table)
-    print('a')
-
     local ThisBoost: Frame = BoostsFrame:WaitForChild("Template"):Clone()
     ThisBoost.Parent = BoostsFrame:WaitForChild("Folder")
     ThisBoost.Text = Boost["Type"] .. " - " .. Boost["Multiplier"] .. "x - " .. FormatTime(Boost["Duration"] - (os.time() - Boost["StartTime"]))
@@ -213,7 +219,7 @@ GiveBoostEvent.OnClientEvent:Connect(function(Boost: table)
     ThisBoost:Destroy()
 end)
 
-StageProgressEvent.OnClientEvent:Connect(function(TransactionType: number, Progress: number)
+StageProgressEvent.OnClientEvent:Connect(function(TransactionType: number, Progress: number, Arg: boolean)
     if TransactionType == 1 then
         StageProgressFrame.Visible = true
         StageProgressFrame:WaitForChild("Label").Text = "Stage: 1/10"
@@ -228,6 +234,50 @@ StageProgressFrame:WaitForChild("Exit").MouseButton1Down:Connect(function()
     StageProgressEvent:FireServer()
 
     StageProgressFrame.Visible = false
+end)
+
+SplashEvent.OnClientEvent:Connect(function(Type: string, Duration: number, Arg: string, Arg2: boolean)
+    if Type == "enter" then
+        SplashGui.Enabled = true
+
+        local Tween = TweenService:Create(SplashImage, SplashInfo, {Size = UDim2.new(2.75, 0, 2.75, 0)})
+        Tween:Play()
+
+        if Arg and Arg == 'false' then
+            HUDGui.Enabled = false
+        end
+
+        if Arg2 and Arg2 == true then
+            Controls:Disable()
+        end
+
+        Tween.Completed:Connect(function()
+            if not Duration then return end
+
+            task.wait(Duration - .75)
+
+            local Tween2 = TweenService:Create(SplashImage, SplashInfo, {Size = UDim2.new(.02, 0, .02, 0)})
+            Tween2:Play()
+
+            Tween2.Completed:Connect(function()
+                SplashGui.Enabled = false
+                if Arg and Arg == 'true' then
+                    HUDGui.Enabled = true
+                end
+
+                if Arg2 and Arg2 == true then
+                    Controls:Enable()
+                end
+            end)
+        end)
+    elseif Type == "exit" then
+        local Tween = TweenService:Create(SplashImage, SplashInfo, {Size = UDim2.new(.02, 0, .02, 0)})
+        Tween:Play()
+
+        Tween.Completed:Connect(function()
+            SplashGui.Enabled = false
+        end)
+    end
 end)
 
 -- / / RETURN

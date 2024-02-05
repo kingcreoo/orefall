@@ -19,6 +19,7 @@ local _Settings = require(ReplicatedStorage:WaitForChild("Settings"))
 
 local Events = ReplicatedStorage:WaitForChild("Events")
 local StageProgressEvent: RemoteEvent = Events:WaitForChild("StageProgress")
+local SplashEvent: RemoteEvent = Events:WaitForChild("Splash")
 
 local ObbiesFolder = workspace:WaitForChild("Obbies")
 local ActiveObbies = {}
@@ -120,6 +121,11 @@ end
 -- / / MODULE FUNCTIONS
 
 function _Obby.Add(Player: Player)
+    local deb = false
+
+    SplashEvent:FireClient(Player, "enter", 2, 'false', true)
+    task.wait(.5)
+
     local Location: Part = SelectLocation()
     local Folder, KillParts, Character = Generate(Player, Location)
     local RespawnPoint = Folder:WaitForChild("Startpoint")
@@ -127,8 +133,14 @@ function _Obby.Add(Player: Player)
 
     for _, Part: Part in pairs(KillParts) do
         Part.Touched:Connect(function(hit)
-            if hit.Parent:FindFirstChildOfClass("Humanoid") then
+            if hit.Parent:FindFirstChildOfClass("Humanoid") and deb == false then
+                deb = true
+                SplashEvent:FireClient(Player, "enter", 2, nil, true)
+                task.wait(.5)
+
                 Character:SetPrimaryPartCFrame(RespawnPoint.CFrame + Vector3.new(0,4,0))
+                task.wait(1.5)
+                deb = false
             end
         end)
     end
@@ -159,6 +171,9 @@ function _Obby.Add(Player: Player)
 
             claimed_reward = true
 
+            SplashEvent:FireClient(Player, "enter", 2, 'true', true)
+            task.wait(.5)
+
             StageProgressEvent:FireClient(Player, 3)
             _Boosts.Give(Player, Reward.Name, 2, 120)
             _Obby.Remove(Player)
@@ -176,6 +191,9 @@ end
 -- / / REMOTES
 
 StageProgressEvent.OnServerEvent:Connect(function(Player: Player)
+    SplashEvent:FireClient(Player, "enter", 2, 'true', true)
+    task.wait(.5)
+
     _Obby.Remove(Player)
 end)
 
