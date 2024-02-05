@@ -48,11 +48,11 @@ function _Pickaxes.Purchase(Player: Player, PickaxeType: string)
         return "owned"
     end
 
-    if PlayerData["leaderstats"]["Cash"] < _Settings.Pickaxes[PickaxeType]["Price"] then -- Player does not have enough cash to purchase this pickaxe
+    if PlayerData["Stats"]["Cash"] < _Settings.Pickaxes[PickaxeType]["Price"] then -- Player does not have enough cash to purchase this pickaxe
         return "cash"
     end
 
-    PlayerData["leaderstats"]["Cash"] -= _Settings.Pickaxes[PickaxeType]["Price"]
+    PlayerData["Stats"]["Cash"] -= _Settings.Pickaxes[PickaxeType]["Price"]
     PlayerData["Pickaxes"][PickaxeType] = 1
 
     _Data.Set(Player, PlayerData)

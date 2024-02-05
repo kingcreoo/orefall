@@ -67,7 +67,7 @@ function _Data.Set(Player: Player, PlayerData: table)
     
     local leaderstats = Player:FindFirstChild("leaderstats")
     if leaderstats then
-        for Stat, Value in pairs(PlayerData["leaderstats"]) do -- Update player's leaderstat data here
+        for Stat, Value in pairs(PlayerData["Stats"]) do -- Update player's leaderstat data here
             leaderstats:WaitForChild(Stat).Value = Value
         end
     end

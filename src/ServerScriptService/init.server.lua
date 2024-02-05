@@ -92,7 +92,7 @@ local function LoadPlayer(Player: Player)
     leaderstats.Name = "leaderstats"
     leaderstats.Parent = Player
 
-    for Stat, Value in pairs(PlayerData["leaderstats"]) do --
+    for Stat, Value in pairs(PlayerData["Stats"]) do --
         local NewValue = Instance.new("IntValue")
         NewValue.Name = Stat
         NewValue.Value = Value

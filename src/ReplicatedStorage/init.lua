@@ -20,7 +20,7 @@ Settings.Locations = {
 }
 
 Settings.DefaultData = { -- In the future we will have to write a system that creates default data based off of the game's files.
-    ["leaderstats"] = {
+    ["Stats"] = {
         ["Cash"] = 100,
         ["Rebirths"] = 0
     },

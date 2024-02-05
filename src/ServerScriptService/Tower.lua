@@ -70,8 +70,8 @@ function Tower:Listen(Player)
                 debounce = true
                 local PlayerData = _Data.Get(Player)
 
-                if PlayerData["leaderstats"]["Cash"] >= _Settings.Droppers[Button.Name]["Value"] then -- Player has stepped on button and can purchase dropper
-                    PlayerData["leaderstats"]["Cash"] -= _Settings.Droppers[Button.Name]["Value"]
+                if PlayerData["Stats"]["Cash"] >= _Settings.Droppers[Button.Name]["Value"] then -- Player has stepped on button and can purchase dropper
+                    PlayerData["Stats"]["Cash"] -= _Settings.Droppers[Button.Name]["Value"]
                     PlayerData["Droppers"][Button.Name] = 1
 
                     _Data.Set(Player, PlayerData)

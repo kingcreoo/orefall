@@ -100,7 +100,7 @@ local function Refine(Player: Player, Ore: string, Time: number)
 
     local PlayerData = _Data.Get(Player) -- get player data
     PlayerQueues[Player.Name][Ore] -= 1 -- remove 1 from this ore's queue
-    PlayerData["leaderstats"]["Cash"] += (_Settings.Ores[Ore]["Reward"] * (Player:GetAttribute("Money") + _Settings.GlobalBoosts["Money"])) -- add to player's cash
+    PlayerData["Stats"]["Cash"] += (_Settings.Ores[Ore]["Reward"] * (Player:GetAttribute("Money") + _Settings.GlobalBoosts["Money"])) -- add to player's cash
     _Data.Set(Player, PlayerData) -- set data
 
     until PlayerQueues[Player.Name][Ore] <= 0
@@ -223,7 +223,7 @@ function _Ores.InstantSell(Player: Player)
     for Ore: string, Amount: number in pairs(PlayerData["Backpack"]) do
         if Amount == 0 then continue end
 
-        PlayerData["leaderstats"]["Cash"] += ((_Settings.Ores[Ore]["RewardInstant"] * Amount) * (Player:GetAttribute("Money") + _Settings.GlobalBoosts["Money"]))
+        PlayerData["Stats"]["Cash"] += ((_Settings.Ores[Ore]["RewardInstant"] * Amount) * (Player:GetAttribute("Money") + _Settings.GlobalBoosts["Money"]))
         PlayerData["Backpack"][Ore] = 0
     end
 
